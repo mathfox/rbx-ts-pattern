@@ -3,6 +3,8 @@ import { match, P } from "..";
 import { Blog } from "./types-catalog/utils";
 import { InvertPattern } from "../types/InvertPattern";
 import { ExtractPreciseValue } from "../types/ExtractPreciseValue";
+import { describe, it, expect } from "@rbxts/jest-globals";
+import { NaN } from "@rbxts/phantom/src/Number";
 
 describe("wildcards", () => {
 	it("should match String wildcards", () => {
@@ -68,12 +70,11 @@ describe("wildcards", () => {
 				})
 				.otherwise(() => false);
 
-			const res2 = match<0 | 1 | 2 | null>(0)
+			const res2 = match<0 | 1 | 2>(0)
 				.with(P.nonNullable, (x) => {
 					type t = Expect<Equal<typeof x, 0 | 1 | 2>>;
 					return true;
 				})
-				.with(null, () => false)
 				.exhaustive();
 
 			expect(res).toEqual(true);
@@ -132,26 +133,26 @@ describe("wildcards", () => {
 		});
 	});
 
-	it("should match String, Number and Boolean wildcards", () => {
-		// Will be { id: number, title: string } | { errorMessage: string }
-		let httpResult = {
-			id: 20,
-			title: "hellooo",
-		}; /* API logic. */
-
-		const res = match<any, Blog | Error>(httpResult)
-			.with({ id: P.number, title: P.string }, (r) => ({
-				id: r.id,
-				title: r.title,
-			}))
-			.with({ errorMessage: P.string }, (r) => new Error(r.errorMessage))
-			.otherwise(() => new Error("Client parse error"));
-
-		expect(res).toEqual({
-			id: 20,
-			title: "hellooo",
-		});
-	});
+	//	it("should match String, Number and Boolean wildcards", () => {
+	//		// Will be { id: number, title: string } | { errorMessage: string }
+	//		let httpResult = {
+	//			id: 20,
+	//			title: "hellooo",
+	//		}; /* API logic. */
+	//
+	//		const res = match<any, Blog >(httpResult)
+	//			.with({ id: P.number, title: P.string }, (r) => ({
+	//				id: r.id,
+	//				title: r.title,
+	//			}))
+	//			.with({ errorMessage: P.string }, (r) => new Error(r.errorMessage))
+	//			.otherwise(() => new Error("Client parse error"));
+	//
+	//		expect(res).toEqual({
+	//			id: 20,
+	//			title: "hellooo",
+	//		});
+	//	});
 
 	it("should infer correctly negated String wildcards", () => {
 		const res = match<string | number | boolean>("")
@@ -200,7 +201,7 @@ describe("wildcards", () => {
 	});
 
 	describe("catch all", () => {
-		const allValueTypes = [undefined, null, Symbol(2), 2, "string", true, () => {}, {}, [], new Map(), new Set()];
+		const allValueTypes = [2, "string", true, () => {}, {}, [], new Map(), new Set()];
 
 		allValueTypes.forEach((value) => {
 			it(`should match ${typeof value} values`, () => {

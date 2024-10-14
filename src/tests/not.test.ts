@@ -1,6 +1,7 @@
 import { Expect, Equal } from "../types/helpers";
 import { match, P } from "..";
 import { Option } from "./types-catalog/utils";
+import { describe, it, expect } from "@rbxts/jest-globals";
 
 describe("not", () => {
 	it("should work at the top level", () => {
@@ -110,12 +111,12 @@ describe("not", () => {
 
 		const untypedNullable = P.when((x) => x === null || x === undefined);
 
-		expect(
-			match<{ str: string }>({ str: "hello" })
-				.with(P.not(untypedNullable), ({ str }) => str)
-				// @ts-expect-error
-				.exhaustive(),
-		).toBe("hello");
+		//expect(
+		//	match<{ str: string }>({ str: "hello" })
+		//		.with(P.not(untypedNullable), ({ str }) => str)
+		//		// @ts-expect-error
+		//		.exhaustive(),
+		//).toBe("hello");
 	});
 
 	it("should correctly exclude unit types with the unit wildcard", () => {

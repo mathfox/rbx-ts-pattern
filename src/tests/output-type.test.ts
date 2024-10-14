@@ -1,3 +1,4 @@
+import { describe, it } from "@rbxts/jest-globals";
 import { match, P } from "..";
 import { Equal, Expect } from "../types/helpers";
 import { State } from "./types-catalog/utils";
@@ -25,12 +26,12 @@ describe("output type", () => {
 
 			const f3 = (input: number) =>
 				match(input)
-					.with(1, () => [1, 2, null])
+					.with(1, () => [1, 2])
 					.with(3, () => [1, 2])
-					.with(P._, () => [null, null])
+					.with(P._, () => [])
 					.exhaustive();
 
-			type o3 = Expect<Equal<ReturnType<typeof f3>, (number | null)[]>>;
+			type o3 = Expect<Equal<ReturnType<typeof f3>, number[]>>;
 		});
 
 		it("if the current inferred output is assignable to the new output, just pick the broader one", () => {

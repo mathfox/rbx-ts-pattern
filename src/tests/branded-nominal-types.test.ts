@@ -1,3 +1,4 @@
+import { describe, it, expect } from "@rbxts/jest-globals";
 import { match, P } from "..";
 
 describe("Branded strings", () => {
@@ -26,7 +27,7 @@ describe("Branded strings", () => {
 		type Tagged<Token> = { readonly [tag]: Token };
 		type Opaque<Type, Token = unknown> = Type & Tagged<Token>;
 
-		const opaqueString = (Math.random() > 0.5 ? "A" : "B") as Opaque<"A" | "B">;
+		const opaqueString = (math.random() > 0.5 ? "A" : "B") as Opaque<"A" | "B">;
 
 		match(opaqueString)
 			.with("A" as Opaque<"A">, () => 1)
@@ -35,7 +36,7 @@ describe("Branded strings", () => {
 	});
 
 	it("issue #178", () => {
-		const symbol: unique symbol = Symbol();
+		const symbol: unique symbol = {} as any;
 
 		interface Branded<key extends string> {
 			[symbol]: { [k in key]: true };

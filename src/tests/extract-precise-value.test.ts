@@ -1,3 +1,4 @@
+import { describe, it } from "@rbxts/jest-globals";
 import { ExtractPreciseValue } from "../types/ExtractPreciseValue";
 import { InvertPattern } from "../types/InvertPattern";
 import { NonNullablePattern } from "../types/Pattern";
@@ -287,37 +288,6 @@ describe("ExtractPreciseValue", () => {
 				b = "b";
 			}
 			type cases = [Expect<Equal<ExtractPreciseValue<A | B, A>, A>>];
-		});
-
-		it("issue #63: it should correctly narrow Error subclasses", () => {
-			class FooError extends Error {
-				foo = "bar";
-			}
-
-			class BazError extends Error {
-				baz = "bil";
-			}
-
-			class ErrorWithOptionalKeys1 extends Error {
-				foo?: string;
-			}
-
-			class ErrorWithOptionalKeys2 extends Error {
-				baz?: string;
-			}
-
-			type cases = [
-				Expect<Equal<ExtractPreciseValue<FooError | BazError | Error, FooError>, FooError>>,
-				Expect<
-					Equal<
-						ExtractPreciseValue<
-							ErrorWithOptionalKeys1 | ErrorWithOptionalKeys2 | ErrorWithOptionalKeys1,
-							ErrorWithOptionalKeys1
-						>,
-						ErrorWithOptionalKeys1
-					>
-				>,
-			];
 		});
 	});
 

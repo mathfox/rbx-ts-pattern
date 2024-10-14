@@ -2,6 +2,7 @@ import { Expect, Equal } from "../types/helpers";
 import { match, P } from "..";
 import { State, Event } from "./types-catalog/utils";
 import { MixedNamedAndAnonymousSelectError, SeveralAnonymousSelectError } from "../types/FindSelected";
+import { describe, it, expect } from "@rbxts/jest-globals";
 
 describe("select", () => {
 	it("should work with tuples", () => {
@@ -67,7 +68,7 @@ describe("select", () => {
 					({ data, other }) => {
 						type t = Expect<Equal<typeof data, string>>;
 						type t2 = Expect<Equal<typeof other, number>>;
-						return data + other.toString();
+						return data + tostring(other);
 					},
 				)
 				.run(),

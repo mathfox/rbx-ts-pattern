@@ -15,12 +15,12 @@ export type State =
 	| { status: "idle" }
 	| { status: "loading" }
 	| { status: "success"; data: string }
-	| { status: "error"; error: Error };
+	| { status: "error"; error: object };
 
 export type Event =
 	| { type: "fetch" }
 	| { type: "success"; data: string; requestTime?: number }
-	| { type: "error"; error: Error }
+	| { type: "error"; error: object }
 	| { type: "cancel" };
 
 export type BigUnion =
@@ -53,26 +53,26 @@ export type BigUnion =
 
 type AsyncResultStatus = "idle" | "loading" | "error" | "success";
 
-export interface BaseAsyncResult<TData, TError = Error> {
+export interface BaseAsyncResult<TData, TError = object> {
 	status: AsyncResultStatus;
 	data?: TData;
 	error?: TError;
 }
 
-export interface AsyncResultIdleOrLoading<TData, TError = Error> extends BaseAsyncResult<TData, TError> {
+export interface AsyncResultIdleOrLoading<TData, TError = object> extends BaseAsyncResult<TData, TError> {
 	status: "idle" | "loading";
 }
 
-export interface AsyncResultSuccess<TData, TError = Error> extends BaseAsyncResult<TData, TError> {
+export interface AsyncResultSuccess<TData, TError = object> extends BaseAsyncResult<TData, TError> {
 	status: "success";
 	data: TData;
 }
 
-export interface AsyncResultError<TData, TError = Error> extends BaseAsyncResult<TData, TError> {
+export interface AsyncResultError<TData, TError = object> extends BaseAsyncResult<TData, TError> {
 	status: "error";
 	error: TError;
 }
-export type AsyncResult<TData, TError = Error> =
+export type AsyncResult<TData, TError = object> =
 	| AsyncResultIdleOrLoading<TData, TError>
 	| AsyncResultSuccess<TData, TError>
 	| AsyncResultError<TData, TError>;

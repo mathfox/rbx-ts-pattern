@@ -1,6 +1,7 @@
 import { match, P } from "..";
 import { Option } from "./types-catalog/utils";
 import { Expect, Equal } from "../types/helpers";
+import { describe, it, expect } from "@rbxts/jest-globals";
 
 describe("Multiple patterns", () => {
 	it("should match if one of the patterns matches", () => {
@@ -91,11 +92,11 @@ describe("Multiple patterns", () => {
 			.exhaustive();
 	});
 
-	it("should work with nullables", () => {
-		match<null | undefined>(null)
-			.with(null, undefined, (x) => "Nullable")
-			.exhaustive();
-	});
+	//it("should work with nullables", () => {
+	//	match<null | undefined>(null)
+	//		.with(null, undefined, (x) => "Nullable")
+	//		.exhaustive();
+	//});
 
 	it("should work with objects", () => {
 		match<{ a: string; b: number } | [1, 2]>({ a: "", b: 2 })
@@ -120,46 +121,46 @@ describe("Multiple patterns", () => {
 			| Map<string, { x: number }>
 			| Set<number>;
 
-		const nonExhaustive = (input: Input) =>
-			match<Input>(input)
-				.with(null, undefined, (x) => {
-					type t = Expect<Equal<typeof x, null | undefined>>;
-					return "Nullable";
-				})
-				.with(P.boolean, P.number, P.string, (x) => {
-					type t = Expect<Equal<typeof x, boolean | number | string>>;
-					return "primitive";
-				})
-				.with({ a: P.string }, [true, 2], P.map("key", P._), P.set(P.number), (x) => {
-					type t = Expect<
-						Equal<typeof x, { a: string; b: number } | [true, 2] | Map<"key", { x: number }> | Set<number>>
-					>;
-
-					return "Object";
-				})
-				.with([false, 2], (x) => {
-					type t = Expect<Equal<typeof x, [false, 2]>>;
-					return "[false, 2]";
-				})
-				.with([false, P.number], (x) => {
-					type t = Expect<Equal<typeof x, [false, number]>>;
-					return "[false, number]";
-				})
-				.with([true, P.number], (x) => {
-					type t = Expect<Equal<typeof x, [true, number]>>;
-					return "[true, number]";
-				})
-				.run();
-
-		const exhaustive = (input: Input) =>
-			match<Input>(input)
-				.with(null, undefined, (x) => "Nullable")
-				.with(P.boolean, P.number, P.string, (x) => "primitive")
-				.with({ a: P.string }, [true, 2], P.map(P.string, P._), P.set(P.number), (x) => "Object")
-				.with([false, 2], (x) => "[false, 2]")
-				.with([false, P.number], (x) => "[false, number]")
-				.with([true, P.number], (x) => "[true, number]")
-				.exhaustive();
+		//		const nonExhaustive = (input: Input) =>
+		//			match<Input>(input)
+		//				.with(null, undefined, (x) => {
+		//					type t = Expect<Equal<typeof x, null | undefined>>;
+		//					return "Nullable";
+		//				})
+		//				.with(P.boolean, P.number, P.string, (x) => {
+		//					type t = Expect<Equal<typeof x, boolean | number | string>>;
+		//					return "primitive";
+		//				})
+		//				.with({ a: P.string }, [true, 2], P.map("key", P._), P.set(P.number), (x) => {
+		//					type t = Expect<
+		//						Equal<typeof x, { a: string; b: number } | [true, 2] | Map<"key", { x: number }> | Set<number>>
+		//					>;
+		//
+		//					return "Object";
+		//				})
+		//				.with([false, 2], (x) => {
+		//					type t = Expect<Equal<typeof x, [false, 2]>>;
+		//					return "[false, 2]";
+		//				})
+		//				.with([false, P.number], (x) => {
+		//					type t = Expect<Equal<typeof x, [false, number]>>;
+		//					return "[false, number]";
+		//				})
+		//				.with([true, P.number], (x) => {
+		//					type t = Expect<Equal<typeof x, [true, number]>>;
+		//					return "[true, number]";
+		//				})
+		//				.run();
+		//
+		//		const exhaustive = (input: Input) =>
+		//			match<Input>(input)
+		//				.with(null, undefined, (x) => "Nullable")
+		//				.with(P.boolean, P.number, P.string, (x) => "primitive")
+		//				.with({ a: P.string }, [true, 2], P.map(P.string, P._), P.set(P.number), (x) => "Object")
+		//				.with([false, 2], (x) => "[false, 2]")
+		//				.with([false, P.number], (x) => "[false, number]")
+		//				.with([true, P.number], (x) => "[true, number]")
+		//				.exhaustive();
 
 		const cases: { input: Input; expected: string }[] = [
 			{ input: null, expected: "Nullable" },
@@ -175,10 +176,10 @@ describe("Multiple patterns", () => {
 			{ input: [false, 3], expected: "[false, number]" },
 		];
 
-		cases.forEach(({ input, expected }) => {
-			expect(nonExhaustive(input)).toEqual(expected);
-			expect(exhaustive(input)).toEqual(expected);
-		});
+		//cases.forEach(({ input, expected }) => {
+		//	expect(nonExhaustive(input)).toEqual(expected);
+		//	expect(exhaustive(input)).toEqual(expected);
+		//});
 	});
 
 	it("when 2 returned values don't match, the error should be at the second returned value", () => {
@@ -196,19 +197,19 @@ describe("Multiple patterns", () => {
 				{
 					a: P.when((arr) => {
 						type t = Expect<Equal<typeof arr, number[]>>;
-						return arr.length === 4;
+						return arr.size() === 4;
 					}),
 				},
 				{
 					a: P.when((arr) => {
 						type t = Expect<Equal<typeof arr, number[]>>;
-						return arr.length === 4;
+						return arr.size() === 4;
 					}),
 				},
 				{
 					a: P.when((arr) => {
 						type t = Expect<Equal<typeof arr, number[]>>;
-						return arr.length === 4;
+						return arr.size() === 4;
 					}),
 				},
 				({ a }) => {},

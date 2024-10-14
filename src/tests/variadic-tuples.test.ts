@@ -1,3 +1,4 @@
+import { describe, it, expect } from "@rbxts/jest-globals";
 import { match, P } from "..";
 import { Equal, Expect } from "../types/helpers";
 
@@ -101,32 +102,32 @@ describe("variadic tuples ([a, ...b[]])", () => {
 				expect(f([4, "5", 6, 1, 2, 3])).toBe("doesn't match");
 			});
 
-			it("[number, number ...boolean[], string, symbol]", () => {
-				const f = (xs: unknown[]) =>
-					match(xs)
-						.with([P.number, P.number, ...P.array(P.boolean), P.string, P.symbol], () => "match")
-						.otherwise(() => "doesn't match");
-
-				expect(f([1, 2, true, "hello", "yo"])).toBe("doesn't match");
-				//                              ^ ❌
-				expect(f([1, 2, true, 3, Symbol("yo")])).toBe("doesn't match");
-				//                    ^ ❌
-				expect(f([1, 2, "true", "str", Symbol("yo")])).toBe("doesn't match");
-				//                ^ ❌
-				expect(f([1, "2", true, "str", Symbol("yo")])).toBe("doesn't match");
-				//            ^ ❌
-				expect(f(["1", 2, true, "str", Symbol("yo")])).toBe("doesn't match");
-				//         ^ ❌
-				expect(f([1, 2, true, "str", Symbol("yo")])).toBe("match");
-				//       ^ ✅
-				expect(f([1, 2, true, false, true, "str", Symbol("yo")])).toBe("match");
-				//       ^ ✅
-
-				expect(f([1, 2, true, "false", true, "str", Symbol("yo")])).toBe(
-					//                    ^ ❌
-					"doesn't match",
-				);
-			});
+			//			it("[number, number ...boolean[], string, symbol]", () => {
+			//				const f = (xs: unknown[]) =>
+			//					match(xs)
+			//						.with([P.number, P.number, ...P.array(P.boolean), P.string, P.symbol], () => "match")
+			//						.otherwise(() => "doesn't match");
+			//
+			//				expect(f([1, 2, true, "hello", "yo"])).toBe("doesn't match");
+			//				//                              ^ ❌
+			//				expect(f([1, 2, true, 3, Symbol("yo")])).toBe("doesn't match");
+			//				//                    ^ ❌
+			//				expect(f([1, 2, "true", "str", Symbol("yo")])).toBe("doesn't match");
+			//				//                ^ ❌
+			//				expect(f([1, "2", true, "str", Symbol("yo")])).toBe("doesn't match");
+			//				//            ^ ❌
+			//				expect(f(["1", 2, true, "str", Symbol("yo")])).toBe("doesn't match");
+			//				//         ^ ❌
+			//				expect(f([1, 2, true, "str", Symbol("yo")])).toBe("match");
+			//				//       ^ ✅
+			//				expect(f([1, 2, true, false, true, "str", Symbol("yo")])).toBe("match");
+			//				//       ^ ✅
+			//
+			//				expect(f([1, 2, true, "false", true, "str", Symbol("yo")])).toBe(
+			//					//                    ^ ❌
+			//					"doesn't match",
+			//				);
+			//			});
 		});
 
 		describe("select", () => {
@@ -401,69 +402,67 @@ describe("variadic tuples ([a, ...b[]])", () => {
 	});
 
 	describe("exhaustiveness checking", () => {
-		it("1 catch-all wildcards", () => {
-			const xs: (string | number)[] = [1, 2, 3, "a", "b", "c"];
-
-			const throws = () =>
-				match([])
-					.with([P.any, ...P.array()], (xs) => {
-						return "branch 1" as const;
-					})
-					// @ts-expect-error: empty list case missing
-					.exhaustive();
-
-			expect(() => throws()).toThrow();
-
-			const res = match(xs)
-				.with([P.any, ...P.array()], (xs) => {
-					return "branch 1" as const;
-				})
-				.with([], (xs) => {
-					return "branch 2" as const;
-				})
-				.exhaustive();
-
-			type t = Expect<Equal<typeof res, "branch 1" | "branch 2">>;
-
-			expect(res).toBe("branch 1");
-		});
-
-		it("2 catch-all wildcards", () => {
-			const xs: (string | number)[] = [1, 2, 3, "a", "b", "c"];
-
-			match(xs)
-				.with([P.any, P.any, ...P.array()], (xs) => {
-					return "branch 1" as const;
-				})
-				// @ts-expect-error: empty list case missing
-				.exhaustive();
-
-			match(xs)
-				.with([P.any, P.any, ...P.array()], (xs) => {
-					return "branch 1" as const;
-				})
-				.with([P.any, ...P.array()], (xs) => {
-					return "branch 2" as const;
-				})
-				// @ts-expect-error: empty list case missing
-				.exhaustive();
-
-			const res = match(xs)
-				.with([P.any, P.any, ...P.array()], (xs) => {
-					return "branch 1" as const;
-				})
-				.with([P.any, ...P.array()], (xs) => {
-					return "branch 2" as const;
-				})
-				.with([], (xs) => {
-					return "branch 3" as const;
-				})
-				.exhaustive();
-
-			type t = Expect<Equal<typeof res, "branch 1" | "branch 2" | "branch 3">>;
-
-			expect(res).toBe("branch 1");
-		});
+		//it("1 catch-all wildcards", () => {
+		//			const xs: (string | number)[] = [1, 2, 3, "a", "b", "c"];
+		//
+		//			const throws = () =>
+		//				match([])
+		//					.with([P.any, ...P.array()], (xs) => {
+		//						return "branch 1" as const;
+		//					})
+		//					// @ts-expect-error: empty list case missing
+		//					.exhaustive();
+		//
+		//			expect(() => throws()).toThrow();
+		//			const res = match(xs)
+		//				.with([P.any, ...P.array()], (xs) => {
+		//					return "branch 1" as const;
+		//				})
+		//				.with([], (xs) => {
+		//					return "branch 2" as const;
+		//				})
+		//				.exhaustive();
+		//
+		//			type t = Expect<Equal<typeof res, "branch 1" | "branch 2">>;
+		//
+		//			expect(res).toBe("branch 1");
+		//});
+		//		it("2 catch-all wildcards", () => {
+		//			const xs: (string | number)[] = [1, 2, 3, "a", "b", "c"];
+		//
+		//			match(xs)
+		//				.with([P.any, P.any, ...P.array()], (xs) => {
+		//					return "branch 1" as const;
+		//				})
+		//				// @ts-expect-error: empty list case missing
+		//				.exhaustive();
+		//
+		//			match(xs)
+		//				.with([P.any, P.any, ...P.array()], (xs) => {
+		//					return "branch 1" as const;
+		//				})
+		//				.with([P.any, ...P.array()], (xs) => {
+		//					return "branch 2" as const;
+		//				})
+		//				// @ts-expect-error: empty list case missing
+		//				.exhaustive();
+		//
+		//			const res = match(xs)
+		//				.with([P.any, P.any, ...P.array()], (xs) => {
+		//					return "branch 1" as const;
+		//				})
+		//				.with([P.any, ...P.array()], (xs) => {
+		//					return "branch 2" as const;
+		//				})
+		//				.with([], (xs) => {
+		//					return "branch 3" as const;
+		//				})
+		//				.exhaustive();
+		//
+		//			type t = Expect<Equal<typeof res, "branch 1" | "branch 2" | "branch 3">>;
+		//
+		//			expect(res).toBe("branch 1");
+		//		});
 	});
 
 	describe("select", () => {

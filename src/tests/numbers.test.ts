@@ -1,5 +1,7 @@
 import { Expect, Equal } from "../types/helpers";
 import { match, P } from "..";
+import { describe, it, expect } from "@rbxts/jest-globals";
+import { NaN } from "@rbxts/phantom/src/Number";
 
 describe("Numbers", () => {
 	it("Should match exact numbers", () => {
@@ -152,7 +154,7 @@ describe("Numbers", () => {
 
 			expect(f(5)).toBe("yes");
 			expect(f(10.123)).toBe("no");
-			expect(f(-Infinity)).toBe("no");
+			expect(f(-math.huge)).toBe("no");
 		});
 		it(`P.number.finite()`, () => {
 			const f = (input: string | number) =>
@@ -168,7 +170,7 @@ describe("Numbers", () => {
 
 			expect(f(5)).toBe("yes");
 			expect(f(10.123)).toBe("yes");
-			expect(f(-Infinity)).toBe("no");
+			expect(f(-math.huge)).toBe("no");
 		});
 		it(`P.number.positive()`, () => {
 			const f = (input: string | number) =>
@@ -185,7 +187,7 @@ describe("Numbers", () => {
 			expect(f(5)).toBe("yes");
 			expect(f(10.123)).toBe("yes");
 			expect(f(-10.123)).toBe("no");
-			expect(f(-Infinity)).toBe("no");
+			expect(f(-math.huge)).toBe("no");
 		});
 		it(`P.number.negative()`, () => {
 			const f = (input: string | number) =>
@@ -202,7 +204,7 @@ describe("Numbers", () => {
 			expect(f(5)).toBe("no");
 			expect(f(10.123)).toBe("no");
 			expect(f(-10.123)).toBe("yes");
-			expect(f(-Infinity)).toBe("yes");
+			expect(f(-math.huge)).toBe("yes");
 		});
 	});
 });

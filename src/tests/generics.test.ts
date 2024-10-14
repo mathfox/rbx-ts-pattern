@@ -1,9 +1,11 @@
+import { describe, it } from "@rbxts/jest-globals";
 import { match, P } from "..";
 import { Equal, Expect } from "../types/helpers";
 import { AsyncResult, AsyncResultError, AsyncResultSuccess, none, Option, some } from "./types-catalog/utils";
+import { isArray } from "@rbxts/phantom/src/Array";
 
 describe("generics", () => {
-	type State<T> = { t: "success"; value: T } | { t: "error"; error: Error } | { t: "loading" };
+	type State<T> = { t: "success"; value: T } | { t: "error"; error: object } | { t: "loading" };
 
 	it("should have basic support for objects containing generics", () => {
 		const f = <T>(input: State<T>) => {
@@ -13,7 +15,7 @@ describe("generics", () => {
 					return "success!";
 				})
 				.with({ t: "error" }, (x) => {
-					type t = Expect<Equal<typeof x, { t: "error"; error: Error }>>;
+					type t = Expect<Equal<typeof x, { t: "error"; error: object }>>;
 					return "error :(";
 				})
 				.with({ t: "loading" }, (x) => {
@@ -31,13 +33,13 @@ describe("generics", () => {
 				.with(P._, (x, y) => {
 					type t = Expect<Equal<typeof x, a[]>>;
 					type t2 = Expect<Equal<typeof y, a[]>>;
-					return some(xs[xs.length - 1]);
+					return some(xs[xs.size() - 1]);
 				})
 				.exhaustive();
 	});
 
 	it("should have basic support for tuples containing generics", () => {
-		type State<T> = { t: "success"; value: T } | { t: "error"; error: Error };
+		type State<T> = { t: "success"; value: T } | { t: "error"; error: object };
 
 		const f = <a, b>(xs: [State<a>, State<b>]) =>
 			match(xs)
@@ -48,11 +50,11 @@ describe("generics", () => {
 				})
 				.with([{ t: "success" }, { t: "error" }], ([x, y]) => {
 					type t = Expect<Equal<typeof x, { t: "success"; value: a }>>;
-					type t2 = Expect<Equal<typeof y, { t: "error"; error: Error }>>;
+					type t2 = Expect<Equal<typeof y, { t: "error"; error: object }>>;
 					return "success!";
 				})
 				.with([{ t: "error" }, P._], ([x, y]) => {
-					type t = Expect<Equal<typeof x, { t: "error"; error: Error }>>;
+					type t = Expect<Equal<typeof x, { t: "error"; error: object }>>;
 					type t2 = Expect<Equal<typeof y, State<b>>>;
 					return "error :(";
 				})
@@ -61,10 +63,18 @@ describe("generics", () => {
 
 	it("Basic generic type guards (with no type level manipulation of the input) should work", () => {
 		const isSuccess = <T>(x: any): x is { t: "success"; value: T } =>
-			Boolean(x && typeof x === "object" && x.t === "success");
+			!!(x && typeIs(x, "table") && "t" in x && x.t === "success");
 
 		const isDoubleSuccess = <T>(x: any): x is { t: "success"; value: [T, T] } =>
-			Boolean(x && typeof x === "object" && x.t === "success" && Array.isArray(x.value) && x.value.length === 2);
+			!!(
+				x &&
+				typeIs(x, "table") &&
+				"t" in x &&
+				x.t === "success" &&
+				"value" in x &&
+				isArray(x.value) &&
+				x.value.size() === 2
+			);
 
 		const f = <T>(input: State<[number, number] | number>) => {
 			return match({ input })

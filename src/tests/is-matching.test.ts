@@ -1,3 +1,4 @@
+import { describe, it, expect } from "@rbxts/jest-globals";
 import { isMatching, P } from "..";
 import { Equal, Expect } from "../types/helpers";
 
@@ -17,7 +18,7 @@ describe("isMatching", () => {
 			type t = Expect<Equal<typeof something, { title: string; author: { name: string; age: number } }>>;
 			expect(true).toBe(true);
 		} else {
-			throw new Error("isMatching should have returned true but it returned false");
+			error("isMatching should have returned true but it returned false");
 		}
 	});
 	it("should act as a type guard function if given a two arguments", () => {
@@ -38,7 +39,7 @@ describe("isMatching", () => {
 			type t = Expect<Equal<typeof something, { title: string; author: { name: string; age: number } }>>;
 			expect(true).toBe(true);
 		} else {
-			throw new Error("isMatching should have returned true but it returned false");
+			error("isMatching should have returned true but it returned false");
 		}
 	});
 
@@ -54,13 +55,13 @@ describe("isMatching", () => {
 		if (isPizza(food)) {
 			type t = Expect<Equal<typeof food, Pizza>>;
 		} else {
-			throw new Error("Expected food to match the pizza pattern!");
+			error("Expected food to match the pizza pattern!");
 		}
 
 		if (isMatching({ type: "pizza" }, food)) {
 			type t = Expect<Equal<typeof food, Pizza>>;
 		} else {
-			throw new Error("Expected food to match the pizza pattern!");
+			error("Expected food to match the pizza pattern!");
 		}
 	});
 });

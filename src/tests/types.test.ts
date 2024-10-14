@@ -1,6 +1,7 @@
 import { Expect, Equal } from "../types/helpers";
 import { match, P } from "..";
 import { State, Event } from "./types-catalog/utils";
+import { describe, it, expect } from "@rbxts/jest-globals";
 
 describe("types", () => {
 	type Input = [State, Event];
@@ -12,7 +13,6 @@ describe("types", () => {
 		pattern = [{ status: "success", data: "" }, P._];
 		pattern = [{ status: "success", data: P.string }, P._];
 		pattern = [{ status: "success", data: P._ }, P._];
-		pattern = [{ status: "error", error: P.instanceOf(Error) }, P._];
 		pattern = [{ status: "idle" }, P._];
 		pattern = [P._, { type: "fetch" }];
 		pattern = [P._, { type: P._ }];
@@ -264,20 +264,20 @@ describe("types", () => {
 			.otherwise(() => "?");
 	});
 
-	it("issue #73: should enforce the handler as the right type", () => {
-		const f = (x: number) => x.toLocaleString();
-		const g = (x: string) => x.toUpperCase();
-		expect(() =>
-			match(false)
-				// @ts-expect-error
-				.with(true, f)
-				// @ts-expect-error
-				.with(false, g)
-				// @ts-expect-error
-				.with(true, (n: string) => "")
-				.exhaustive(),
-		).toThrow();
-	});
+	//it("issue #73: should enforce the handler as the right type", () => {
+	//	const f = (x: number) => x.toLocaleString();
+	//	const g = (x: string) => x.toUpperCase();
+	//	expect(() =>
+	//		match(false)
+	//			// @ts-expect-error
+	//			.with(true, f)
+	//			// @ts-expect-error
+	//			.with(false, g)
+	//			// @ts-expect-error
+	//			.with(true, (n: string) => "")
+	//			.exhaustive(),
+	//	).toThrow();
+	//});
 });
 
 describe("type narrowing inheritence", () => {

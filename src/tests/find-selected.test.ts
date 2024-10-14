@@ -1,3 +1,4 @@
+import { describe, it } from "@rbxts/jest-globals";
 import * as symbols from "../internals/symbols";
 import { FindSelected, MixedNamedAndAnonymousSelectError, SeveralAnonymousSelectError } from "../types/FindSelected";
 import { Equal, Expect } from "../types/helpers";

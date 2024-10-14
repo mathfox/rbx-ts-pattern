@@ -1,3 +1,4 @@
+import { describe, it, expect } from "@rbxts/jest-globals";
 import { P, match } from "..";
 import { Equal, Expect } from "../types/helpers";
 
@@ -145,7 +146,7 @@ describe("chainable methods", () => {
 			expect(f(8)).toBe("no");
 			expect(f(-2)).toBe("no");
 			expect(f(4.123)).toBe("no");
-			expect(f(Infinity)).toBe("no");
+			expect(f(math.huge)).toBe("no");
 		});
 	});
 

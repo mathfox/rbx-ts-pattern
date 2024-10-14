@@ -1,3 +1,4 @@
+import { describe, it } from "@rbxts/jest-globals";
 import {
 	Drop,
 	Equal,

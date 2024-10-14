@@ -1,3 +1,4 @@
+import { describe, it, expect } from "@rbxts/jest-globals";
 import { match, P } from "..";
 import { Equal, Expect } from "../types/helpers";
 
@@ -15,17 +16,9 @@ describe("Primitive values", () => {
 					type t = Expect<Equal<typeof x, false>>;
 					return "false";
 				})
-				.with(null, (x) => {
-					type t = Expect<Equal<typeof x, null>>;
-					return "null";
-				})
 				.with(undefined, (x) => {
 					type t = Expect<Equal<typeof x, undefined>>;
 					return "undefined";
-				})
-				.with(Symbol.for("Hello"), (x) => {
-					type t = Expect<Equal<typeof x, symbol>>;
-					return "Symbol";
 				})
 				.with("hello", (x) => {
 					type t = Expect<Equal<typeof x, "hello">>;
@@ -54,10 +47,6 @@ describe("Primitive values", () => {
 					type t = Expect<Equal<typeof x, null | undefined>>;
 					return "nullish";
 				})
-				.with(P.symbol, (x) => {
-					type t = Expect<Equal<typeof x, symbol>>;
-					return "symbol";
-				})
 				.with(P.string, (x) => {
 					type t = Expect<Equal<typeof x, string>>;
 					return "string";
@@ -69,8 +58,6 @@ describe("Primitive values", () => {
 				.otherwise(() => "?");
 
 		expect(f(true)).toEqual("boolean");
-		expect(f(null)).toEqual("nullish");
-		expect(f(Symbol("hello"))).toEqual("symbol");
 		expect(f("hello")).toEqual("string");
 		expect(f(20)).toEqual("number");
 	});

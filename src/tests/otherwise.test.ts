@@ -1,3 +1,4 @@
+import { describe, it, expect } from "@rbxts/jest-globals";
 import { match } from "..";
 
 describe("otherwise", () => {

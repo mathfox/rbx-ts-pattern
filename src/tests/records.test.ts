@@ -1,5 +1,6 @@
 import { Expect, Equal } from "../types/helpers";
 import { match, P } from "..";
+import { describe, it, expect } from "@rbxts/jest-globals";
 
 describe("Records ({})", () => {
 	it("Should match records", () => {

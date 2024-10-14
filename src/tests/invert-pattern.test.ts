@@ -1,3 +1,4 @@
+import { describe, it } from "@rbxts/jest-globals";
 import { Equal, Expect } from "../types/helpers";
 import { InvertPattern, InvertPatternForExclude } from "../types/InvertPattern";
 import { ArrayP, GuardP, Matcher, Pattern } from "../types/Pattern";

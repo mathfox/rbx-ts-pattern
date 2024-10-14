@@ -1,3 +1,4 @@
+import { describe, it, expect } from "@rbxts/jest-globals";
 import { P, match } from "..";
 import { Equal, Expect } from "../types/helpers";
 

@@ -1,3 +1,4 @@
+import { describe, it } from "@rbxts/jest-globals";
 import { BuildMany } from "../types/BuildMany";
 import { Equal, Expect } from "../types/helpers";
 import { State } from "./types-catalog/utils";

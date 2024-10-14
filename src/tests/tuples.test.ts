@@ -1,6 +1,7 @@
 import { Expect, Equal } from "../types/helpers";
 import { match, P } from "..";
 import { State, Event } from "./types-catalog/utils";
+import { describe, it, expect } from "@rbxts/jest-globals";
 
 describe("tuple ([a, b])", () => {
 	it("should match tuple patterns", () => {
@@ -119,14 +120,14 @@ describe("tuple ([a, b])", () => {
 					};
 				})
 
-				.with([{ status: "loading" }, { type: "error" }], (x) => {
-					type t = Expect<Equal<typeof x, [{ status: "loading" }, { type: "error"; error: Error }]>>;
-
-					return {
-						status: "error",
-						error: x[1].error,
-					};
-				})
+				//				.with([{ status: "loading" }, { type: "error" }], (x) => {
+				//					type t = Expect<Equal<typeof x, [{ status: "loading" }, { type: "error"; error: Error }]>>;
+				//
+				//					return {
+				//						status: "error",
+				//						error: x[1].error,
+				//					};
+				//				})
 
 				.with([{ status: "loading" }, { type: "cancel" }], (x) => {
 					type t = Expect<Equal<typeof x, [{ status: "loading" }, { type: "cancel" }]>>;
