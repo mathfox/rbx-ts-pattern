@@ -44,7 +44,7 @@ describe("Primitive values", () => {
 					return "boolean";
 				})
 				.with(P.nullish, (x) => {
-					type t = Expect<Equal<typeof x, null | undefined>>;
+					type t = Expect<Equal<typeof x, undefined>>;
 					return "nullish";
 				})
 				.with(P.string_, (x) => {

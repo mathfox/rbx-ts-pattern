@@ -253,7 +253,7 @@ describe("and, and or patterns", () => {
 						P.intersection(
 							P.any,
 							P.any,
-							P.when((n): n is number => typeof n === "number"),
+							P.when((n): n is number => typeIs(n, "number")),
 							P.any,
 							P.select_(),
 						),
@@ -295,7 +295,7 @@ describe("and, and or patterns", () => {
 						{
 							n: P.intersection(
 								P.any,
-								P.when((n): n is number => typeof n === "number"),
+								P.when((n): n is number => typeIs(n, "number")),
 								P.any,
 								P.select_(),
 							),
@@ -390,7 +390,7 @@ describe("and, and or patterns", () => {
 			};
 			const f = (input: Input) => {
 				return match(input)
-					.with({ value: P.not({ type: P.union("a", "b") }) }, (x) => {
+					.with({ value: P.not_({ type: P.union("a", "b") }) }, (x) => {
 						type t = Expect<Equal<typeof x, { value: { type: "c"; b: boolean } }>>;
 						return "not a or b";
 					})

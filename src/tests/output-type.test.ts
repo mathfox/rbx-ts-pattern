@@ -38,10 +38,10 @@ describe("output type", () => {
 			const f1 = (input: number) =>
 				match(input)
 					.with(1, () => [1, 2])
-					.with(P._, () => [1, 2, null])
+					.with(P._, () => [1, 2])
 					.exhaustive();
 
-			type o1 = Expect<Equal<ReturnType<typeof f1>, (number | null)[]>>;
+			type o1 = Expect<Equal<ReturnType<typeof f1>, number[]>>;
 		});
 
 		//		it("It should still be possible specify a precise output type", () => {
@@ -80,22 +80,22 @@ describe("output type", () => {
 
 			const f3 = (input: number) =>
 				match(input)
-					.with(1, () => [1, 2, null])
+					.with(1, () => [1, 2])
 					.with(3, () => [1, 2])
-					.with(P._, () => [null, null])
+					.with(P._, () => [])
 					.run();
 
-			type o3 = Expect<Equal<ReturnType<typeof f3>, (number | null)[]>>;
+			type o3 = Expect<Equal<ReturnType<typeof f3>, number[]>>;
 		});
 
 		it("if the current inferred output is assignable to the new output, just pick the broader one", () => {
 			const f1 = (input: number) =>
 				match(input)
 					.with(1, () => [1, 2])
-					.with(P._, () => [1, 2, null])
+					.with(P._, () => [1, 2])
 					.run();
 
-			type o1 = Expect<Equal<ReturnType<typeof f1>, (number | null)[]>>;
+			type o1 = Expect<Equal<ReturnType<typeof f1>, number[]>>;
 		});
 
 		//		it("It should still be possible specify a precise output type", () => {
@@ -134,22 +134,22 @@ describe("output type", () => {
 
 			const f3 = (input: number) =>
 				match(input)
-					.with(1, () => [1, 2, null])
+					.with(1, () => [1, 2])
 					.with(3, () => [1, 2])
-					.with(P._, () => [null, null])
+					.with(P._, () => [])
 					.otherwise(() => [0]);
 
-			type o3 = Expect<Equal<ReturnType<typeof f3>, (number | null)[]>>;
+			type o3 = Expect<Equal<ReturnType<typeof f3>, number[]>>;
 		});
 
 		it("if the current inferred output is assignable to the new output, just pick the broader one", () => {
 			const f1 = (input: number) =>
 				match(input)
 					.with(1, () => [1, 2])
-					.with(P._, () => [1, 2, null])
+					.with(P._, () => [1, 2])
 					.otherwise(() => [0]);
 
-			type o1 = Expect<Equal<ReturnType<typeof f1>, (number | null)[]>>;
+			type o1 = Expect<Equal<ReturnType<typeof f1>, number[]>>;
 		});
 
 		//		it("It should still be possible specify a precise output type", () => {

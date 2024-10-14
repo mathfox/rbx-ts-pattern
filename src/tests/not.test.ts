@@ -7,11 +7,11 @@ describe("not", () => {
 	it("should work at the top level", () => {
 		const get = (x: unknown): string =>
 			match(x)
-				.with(P.not(P.number), (x) => {
+				.with(P.not_(P.number), (x) => {
 					type t = Expect<Equal<typeof x, unknown>>;
 					return "not a number";
 				})
-				.with(P.not(P.string_), (x) => {
+				.with(P.not_(P.string_), (x) => {
 					type t = Expect<Equal<typeof x, unknown>>;
 					return "not a string";
 				})
@@ -25,7 +25,7 @@ describe("not", () => {
 		type DS = { x: string | number; y: string | number };
 		const get = (x: DS) =>
 			match(x)
-				.with({ y: P.number, x: P.not(P.string_) }, (x) => {
+				.with({ y: P.number, x: P.not_(P.string_) }, (x) => {
 					type t = Expect<Equal<typeof x, { x: number; y: number }>>;
 					return "yes";
 				})
@@ -42,7 +42,7 @@ describe("not", () => {
 
 		const get = (x: "one" | "two") =>
 			match(x)
-				.with(P.not(one), (x) => {
+				.with(P.not_(one), (x) => {
 					type t = Expect<Equal<typeof x, "two">>;
 					return "not 1";
 				})
@@ -62,11 +62,11 @@ describe("not", () => {
 
 		const get = (x: "one" | "two") =>
 			match({ key: x })
-				.with({ key: P.not(one) }, (x) => {
+				.with({ key: P.not_(one) }, (x) => {
 					type t = Expect<Equal<typeof x, { key: "two" }>>;
 					return "not 1";
 				})
-				.with({ key: P.not(two) }, (x) => {
+				.with({ key: P.not_(two) }, (x) => {
 					type t = Expect<Equal<typeof x, { key: "one" }>>;
 					return "not 2";
 				})
@@ -85,7 +85,7 @@ describe("not", () => {
 
 		const get = (x: Input) =>
 			match(x)
-				.with({ type: P.not("success") }, (x) => {
+				.with({ type: P.not_("success") }, (x) => {
 					type t = Expect<Equal<typeof x, { type: "error" }>>;
 					return "error";
 				})
@@ -100,20 +100,20 @@ describe("not", () => {
 	});
 
 	it("should correctly invert the type of a Matcher", () => {
-		const nullable = P.when((x: unknown): x is null | undefined => x === null || x === undefined);
+		const nullable = P.when((x: unknown): x is undefined => x === undefined);
 
 		expect(
-			match<{ str: string } | null>({ str: "hello" })
-				.with(P.not(nullable), ({ str }) => str)
+			match<{ str: string }>({ str: "hello" })
+				.with(P.not_(nullable), ({ str }) => str)
 				.with(nullable, () => "")
 				.exhaustive(),
 		).toBe("hello");
 
-		const untypedNullable = P.when((x) => x === null || x === undefined);
+		const untypedNullable = P.when((x) => x === undefined);
 
 		//expect(
 		//	match<{ str: string }>({ str: "hello" })
-		//		.with(P.not(untypedNullable), ({ str }) => str)
+		//		.with(P.not_(untypedNullable), ({ str }) => str)
 		//		// @ts-expect-error
 		//		.exhaustive(),
 		//).toBe("hello");
@@ -121,16 +121,16 @@ describe("not", () => {
 
 	it("should correctly exclude unit types with the unit wildcard", () => {
 		expect(
-			match<{ str: string | null | undefined }>({ str: "hello" })
-				.with({ str: P.not(P.nullish) }, ({ str }) => {
+			match<{ str: string | undefined }>({ str: "hello" })
+				.with({ str: P.not_(P.nullish) }, ({ str }) => {
 					type t = Expect<Equal<typeof str, string>>;
 
 					return str;
 				})
 				.with({ str: P.nullish }, ({ str }) => {
-					type t = Expect<Equal<typeof str, null | undefined>>;
+					type t = Expect<Equal<typeof str, undefined>>;
 
-					return null;
+					return undefined;
 				})
 				.exhaustive(),
 		).toBe("hello");
@@ -139,7 +139,7 @@ describe("not", () => {
 	it("shouldn't change a the type if its any or unknown", () => {
 		expect(
 			match<{ str: any }>({ str: "hello" })
-				.with({ str: P.not(P.nullish) }, (x) => {
+				.with({ str: P.not_(P.nullish) }, (x) => {
 					type t = Expect<Equal<typeof x, { str: any }>>;
 					return "hello";
 				})
@@ -158,7 +158,7 @@ describe("not", () => {
 					{
 						type: "some",
 						value: {
-							coords: P.not({ x: "left" }),
+							coords: P.not_({ x: "left" }),
 						},
 					},
 					(x) => {
@@ -181,13 +181,13 @@ describe("not", () => {
 	it("should consider the expression exhaustive if the sub pattern matches something that will never match", () => {
 		expect(
 			match<{ str: string }>({ str: "hello" })
-				.with(P.not(P.number), ({ str }) => str)
+				.with(P.not_(P.number), ({ str }) => str)
 				.exhaustive(),
 		).toBe("hello");
 
 		//expect(() =>
 		//	match<number>(1)
-		//		.with(P.not(P.number), (n) => n)
+		//		.with(P.not_(P.number), (n) => n)
 		//		// @ts-expect-error
 		//		.exhaustive(),
 		//).toThrow();
@@ -198,9 +198,9 @@ describe("not", () => {
 
 		const notMatch = (value: Input) =>
 			match(value)
-				.with(P.not(P.string_), (value) => `value is NOT a string: ${value}`)
-				.with(P.not(P.number), (value) => `value is NOT a number: ${value}`)
-				.with(P.not(P.boolean), (value) => `value is NOT a boolean: ${value}`)
+				.with(P.not_(P.string_), (value) => `value is NOT a string: ${value}`)
+				.with(P.not_(P.number), (value) => `value is NOT a number: ${value}`)
+				.with(P.not_(P.boolean), (value) => `value is NOT a boolean: ${value}`)
 				.exhaustive();
 
 		const inputs: { input: Input; expected: string }[] = [
@@ -227,7 +227,7 @@ describe("not", () => {
 		let input = { type: "user", name: "Gabriel" } as unknown as Input;
 
 		match(input)
-			.with({ type: "video", seconds: P.not(10) }, () => "not video of 10 seconds.")
+			.with({ type: "video", seconds: P.not_(10) }, () => "not video of 10 seconds.")
 			// This should work
 			.with({ type: "video", seconds: 10 }, () => "video of 10 seconds.")
 			.otherwise(() => "something else");
@@ -238,7 +238,7 @@ describe("not", () => {
 	//			match(input)
 	//				.with(
 	//					// not 10, but still can be any number.
-	//					{ type: "video", seconds: P.not(10) },
+	//					{ type: "video", seconds: P.not_(10) },
 	//					() => "not video of 10 seconds.",
 	//				)
 	//				// @ts-expect-error
@@ -247,22 +247,22 @@ describe("not", () => {
 
 	it("exhaustive should work when P.not is followed by the anti-pattern", () => {
 		match<number>(1)
-			.with(P.not(P.number), () => "not 2")
+			.with(P.not_(P.number), () => "not 2")
 			.with(P.number, () => "2")
 			.exhaustive();
 
 		match<1 | 2>(1)
-			.with(P.not(2), () => "1")
+			.with(P.not_(2), () => "1")
 			.with(2, () => "2")
 			.exhaustive();
 
 		match<"a" | "b" | "c">("a")
-			.with(P.not("a"), () => "1")
+			.with(P.not_("a"), () => "1")
 			.with("a", () => "2")
 			.exhaustive();
 
 		//match<number>(1)
-		//	.with(P.not(2), () => "not 2")
+		//	.with(P.not_(2), () => "not 2")
 		//	.with(2, () => "2")
 		//	// FIXME: Technically, this pattern is exhaustive but I don't see a way to make sure it is
 		//	// without negated types (https://github.com/microsoft/TypeScript/pull/29317).

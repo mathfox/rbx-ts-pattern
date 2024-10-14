@@ -118,7 +118,7 @@ describe("type errors", () => {
 	//	});
 
 	it("if a pattern is any, the outer expression shouldn't throw a type error", () => {
-		const anyVar = null as any;
+		const anyVar = undefined as any;
 
 		const input = { a: "a" };
 

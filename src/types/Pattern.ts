@@ -114,7 +114,7 @@ export type UnknownPattern =
  * `Pattern<a>` is the generic type for patterns matching a value of type `a`. A pattern can be any (nested) javascript value.
  *
  * They can also be wildcards, like `P._`, `P.string_`, `P.number`,
- * or other matchers, like `P.when(predicate)`, `P.not(pattern)`, etc.
+ * or other matchers, like `P.when(predicate)`, `P.not_(pattern)`, etc.
  *
  * [Read the documentation for `P.Pattern` on GitHub](https://github.com/gvergnaud/ts-pattern#patterns)
  *
@@ -154,7 +154,7 @@ export type StringPattern = StringChainable<GuardP<unknown, string>, never>;
 export type NumberPattern = NumberChainable<GuardP<unknown, number>, never>;
 export type BooleanPattern = Chainable<GuardP<unknown, boolean>, never>;
 export type SymbolPattern = Chainable<GuardP<unknown, symbol>, never>;
-export type NullishPattern = Chainable<GuardP<unknown, null | undefined>, never>;
+export type NullishPattern = Chainable<GuardP<unknown, undefined>, never>;
 
 export type NonNullablePattern = Chainable<GuardP<unknown, {}>, never>;
 

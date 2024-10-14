@@ -62,10 +62,10 @@ describe("generics", () => {
 	});
 
 	it("Basic generic type guards (with no type level manipulation of the input) should work", () => {
-		const isSuccess = <T>(x: any): x is { t: "success"; value: T } =>
+		const isSuccess = <T>(x: unknown): x is { t: "success"; value: T } =>
 			!!(x && typeIs(x, "table") && "t" in x && x.t === "success");
 
-		const isDoubleSuccess = <T>(x: any): x is { t: "success"; value: [T, T] } =>
+		const isDoubleSuccess = <T>(x: unknown): x is { t: "success"; value: [T, T] } =>
 			!!(
 				x &&
 				typeIs(x, "table") &&

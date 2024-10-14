@@ -55,7 +55,7 @@ describe("types", () => {
 
 		const pattern5: P.Pattern<Input> = [P._, { type: P.when((t: Event["type"]) => true) }];
 
-		const isFetch = (type: string): type is "fetch" => type === "fetch";
+		const isFetch = (type_: string): type_ is "fetch" => type_ === "fetch";
 
 		const pattern6: P.Pattern<Input> = [P._, { type: P.when(isFetch) }];
 
@@ -127,11 +127,11 @@ describe("types", () => {
 				return "ok";
 			},
 		);
-		match<Input>({ type: "hello" }).with(P.not("hello" as const), (x) => {
+		match<Input>({ type: "hello" }).with(P.not_("hello" as const), (x) => {
 			type t = Expect<Equal<typeof x, Input>>;
 			return "ok";
 		});
-		match<Input>({ type: "hello" }).with(P.not(P.string_), (x) => {
+		match<Input>({ type: "hello" }).with(P.not_(P.string_), (x) => {
 			type t = Expect<
 				Equal<
 					typeof x,
@@ -146,7 +146,7 @@ describe("types", () => {
 			return "ok";
 		});
 		match<Input>({ type: "hello" })
-			.with(P.not(P.when((x) => true)), (x) => {
+			.with(P.not_(P.when((x) => true)), (x) => {
 				type t = Expect<Equal<typeof x, Input>>;
 				return "ok";
 			})
@@ -172,7 +172,7 @@ describe("types", () => {
 			type t = Expect<Equal<typeof x, { type: string; hello?: { yo: number } | undefined }>>;
 			return "ok";
 		});
-		match<Input>({ type: "hello" }).with({ type: P.not("hello" as "hello") }, (x) => {
+		match<Input>({ type: "hello" }).with({ type: P.not_("hello" as "hello") }, (x) => {
 			type t = Expect<
 				Equal<
 					typeof x,
@@ -185,19 +185,19 @@ describe("types", () => {
 			return "ok";
 		});
 
-		match<Input>({ type: "hello" }).with({ type: P.not(P.string_) }, (x) => {
+		match<Input>({ type: "hello" }).with({ type: P.not_(P.string_) }, (x) => {
 			type t = Expect<Equal<typeof x, Input>>;
 			return "ok";
 		});
-		match<Input>({ type: "hello" }).with({ type: P.not(P.when((x) => true)) }, (x) => {
+		match<Input>({ type: "hello" }).with({ type: P.not_(P.when((x) => true)) }, (x) => {
 			type t = Expect<Equal<typeof x, Input>>;
 			return "ok";
 		});
-		match<Input>({ type: "hello" }).with(P.not({ type: P.when((x) => true) }), (x) => {
+		match<Input>({ type: "hello" }).with(P.not_({ type: P.when((x) => true) }), (x) => {
 			type t = Expect<Equal<typeof x, string>>;
 			return "ok";
 		});
-		match<Input>({ type: "hello" }).with(P.not({ type: P.string_ }), (x) => {
+		match<Input>({ type: "hello" }).with(P.not_({ type: P.string_ }), (x) => {
 			type t = Expect<Equal<typeof x, string>>;
 			return "ok";
 		});

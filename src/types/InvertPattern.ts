@@ -159,7 +159,7 @@ type ExcludeIfExists<a, b> =
 				? // we shouldn't exclude because this will result in
 					// excluding the whole primitive type even though only
 					// one value has been handled by this pattern.
-					// In other words `P.not(10)` on a `number` input shouldn't
+					// In other words `P.not_(10)` on a `number` input shouldn't
 					// exclude `number`.
 					never
 				: DeepExclude<a, b>;

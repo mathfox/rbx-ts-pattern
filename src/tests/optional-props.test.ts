@@ -42,7 +42,7 @@ describe("optional properties", () => {
 
 		const f = (foo: Foo) =>
 			match(foo)
-				.with({ type: "test", id: P.not(undefined) }, ({ id }) => {
+				.with({ type: "test", id: P.not_(undefined) }, ({ id }) => {
 					type t = Expect<Equal<typeof id, string>>;
 					return 0;
 				})

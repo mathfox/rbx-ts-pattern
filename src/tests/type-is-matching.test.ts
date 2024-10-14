@@ -133,7 +133,7 @@ describe("IsMatching", () => {
 				Expect<Equal<IsMatching<{ type: "c"; value: { type: "d" } | 2 }, { type: "c"; value: 3 }>, false>>,
 				Expect<Equal<IsMatching<Option<{ type: "a" } | { type: "b" }>, { kind: "some"; value: { type: "a" } }>, true>>,
 				Expect<Equal<IsMatching<Option<{ type: "a" } | { type: "b" }>, { kind: "some"; value: { type: "c" } }>, false>>,
-				// the empty object matches everything except null | undefined
+				// the empty object matches everything except  undefined
 				// just like the `{}` type.
 				Expect<Equal<IsMatching<{ type: "a" }, {}>, true>>,
 				Expect<Equal<IsMatching<{}, { type: "a" }>, false>>,

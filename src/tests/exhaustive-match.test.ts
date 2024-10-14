@@ -293,7 +293,7 @@ describe("exhaustive()", () => {
 			//
 			//			match(input)
 			//				.with([1, P._], (x) => 1)
-			//				.with(["two", { kind: "some" }], ([_, { value }]) => value.length)
+			//				.with(["two", { kind: "some" }], ([_, { value }]) => value.size())
 			//				.with([3, P._], () => 3)
 			//				// @ts-expect-error
 			//				.exhaustive();
@@ -508,7 +508,7 @@ describe("exhaustive()", () => {
 				b: X;
 				c: X;
 			}>({ a: 1, b: 1, c: 1 })
-				.with({ a: P.not(1) }, () => "a != 1")
+				.with({ a: P.not_(1) }, () => "a != 1")
 				.with({ a: 1 }, () => "a != 1")
 				.exhaustive();
 
@@ -690,7 +690,7 @@ describe("exhaustive()", () => {
 			  }
 			| { type: "picture"; src: string };
 
-		const isNumber = (x: unknown): x is number => typeof x === "number";
+		const isNumber = (x: unknown): x is number => typeIs(x, "number");
 
 		match<Input>({ type: "text", text: "Hello", author: { name: "Gabriel" } })
 			.with(
@@ -732,10 +732,13 @@ describe("exhaustive()", () => {
 		const reducer = (state: State, event: Event): State =>
 			match<[State, Event], State>([state, event])
 				.with([{ status: "loading" }, { type: "success", data: P.select_() }], (data) => ({ status: "success", data }))
-				.with([{ status: "loading" }, { type: "error", error: P.select_() }], (error) => ({ status: "error", error }))
+				.with([{ status: "loading" }, { type: "error", error: P.select_() }], (error_) => ({
+					status: "error",
+					error: error_,
+				}))
 				.with([{ status: "loading" }, { type: "cancel" }], () => initState)
 
-				.with([{ status: P.not("loading") }, { type: "fetch" }], (value) => ({
+				.with([{ status: P.not_("loading") }, { type: "fetch" }], (value) => ({
 					status: "loading",
 				}))
 				.with(P._, () => state)
@@ -810,14 +813,14 @@ describe("exhaustive()", () => {
 		it("should work with a single not pattern", () => {
 			//const reducer1 = (state: State, event: Event): State =>
 			//	match<[State, Event], State>([state, event])
-			//		.with([{ status: P.not("loading") }, P.any], (x) => state)
+			//		.with([{ status: P.not_("loading") }, P.any], (x) => state)
 			//		.with([{ status: "loading" }, { type: "fetch" }], () => state)
 			//		// @ts-expect-error
 			//		.exhaustive();
 
 			const reducer3 = (state: State, event: Event): State =>
 				match<[State, Event], State>([state, event])
-					.with([{ status: P.not("loading") }, P.any], (x) => state)
+					.with([{ status: P.not_("loading") }, P.any], (x) => state)
 					.with([{ status: "loading" }, P.any], () => state)
 					.exhaustive();
 		});
@@ -825,14 +828,14 @@ describe("exhaustive()", () => {
 		it("should work with several not patterns", () => {
 			const reducer = (state: State, event: Event): State =>
 				match<[State, Event], State>([state, event])
-					.with([{ status: P.not("loading") }, { type: P.not("fetch") }], (x) => state)
+					.with([{ status: P.not_("loading") }, { type: P.not_("fetch") }], (x) => state)
 					.with([{ status: "loading" }, { type: P.any }], () => state)
 					.with([{ status: P.any }, { type: "fetch" }], () => state)
 					.exhaustive();
 
 			const f = (input: readonly [1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3]) =>
 				match(input)
-					.with([P.not(1), P.not(1), P.not(1)], (x) => "ok")
+					.with([P.not_(1), P.not_(1), P.not_(1)], (x) => "ok")
 					.with([1, P._, P._], () => "ok")
 					.with([P._, 1, P._], () => "ok")
 					.with([P._, P._, 1], () => "ok")
@@ -850,7 +853,7 @@ describe("exhaustive()", () => {
 
 			//const f2 = (input: [1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3]) =>
 			//	match(input)
-			//		.with([P.not(1), P.not(1), P.not(1)], (x) => "ok")
+			//		.with([P.not_(1), P.not_(1), P.not_(1)], (x) => "ok")
 			//		.with([1, P.any, P.any], () => "ok")
 			//		.with([P.any, 1, P.any], () => "ok")
 			//		// @ts-expect-error : NonExhaustiveError<[3, 3, 1] | [3, 2, 1] | [2, 3, 1] | [2, 2, 1]>
@@ -860,7 +863,7 @@ describe("exhaustive()", () => {
 		it("should work with not patterns and lists", () => {
 			//const f = (input: (1 | 2 | 3)[]) =>
 			//	match(input)
-			//		.with([P.not(1)], (x) => "ok")
+			//		.with([P.not_(1)], (x) => "ok")
 			//		.with([1], (x) => "ok")
 			//		// @ts-expect-error: NonExhaustiveError<(1 | 2 | 3)[]>, because lists can be heterogenous
 			//		.exhaustive();

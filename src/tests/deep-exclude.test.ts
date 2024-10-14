@@ -45,15 +45,15 @@ describe("DeepExclude", () => {
 		});
 
 		it("should work with nested object and only distribute what is necessary", () => {
-			type x = DeepExclude<{ str: string | null | undefined }, { str: string }>;
-			type xx = DistributeMatchingUnions<{ str: string | null | undefined }, { str: string }>;
-			type xxx = FindUnionsMany<{ str: string | null | undefined }, { str: string }>;
-			type xxxx = IsMatching<{ str: string | null | undefined }, { str: string }>;
-			type xxxxx = FindUnions<{ str: string | null | undefined }, { str: string }, []>;
-			type y = DeepExclude<{ str: string | null | undefined }, { str: null | undefined }>;
+			type x = DeepExclude<{ str: string | undefined }, { str: string }>;
+			type xx = DistributeMatchingUnions<{ str: string | undefined }, { str: string }>;
+			type xxx = FindUnionsMany<{ str: string | undefined }, { str: string }>;
+			type xxxx = IsMatching<{ str: string | undefined }, { str: string }>;
+			type xxxxx = FindUnions<{ str: string | undefined }, { str: string }, []>;
+			type y = DeepExclude<{ str: string | undefined }, { str: undefined }>;
 
 			type cases = [
-				Expect<Equal<x, { str: null } | { str: undefined }>>,
+				Expect<Equal<x, { str: undefined }>>,
 				Expect<Equal<y, { str: string }>>,
 				Expect<Equal<DeepExclude<{ a: { b: "x" | "y" } }, { a: { b: "x" } }>, { a: { b: "y" } }>>,
 				Expect<

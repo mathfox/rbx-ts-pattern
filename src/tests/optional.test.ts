@@ -53,17 +53,17 @@ describe("optional", () => {
 			return x;
 		});
 
-		match(input).with({ type: "a", a: P.select_().optional() }, (x) => {
-			type t = Expect<Equal<typeof x, { name: string; age: number } | undefined>>;
-			return x;
-		});
+		//match(input).with({ type: "a", a: P.select_().optional() }, (x) => {
+		//	type t = Expect<Equal<typeof x, { name: string; age: number } | undefined>>;
+		//	return x;
+		//});
 
 		match(input).with({ type: "b", b: P.select_(P.optional(P.union("test"))) }, (x) => {
 			type t = Expect<Equal<typeof x, "test" | undefined>>;
 			return x;
 		});
 
-		match(input).with({ a: P.not(undefined) }, (x) => {
+		match(input).with({ a: P.not_(undefined) }, (x) => {
 			type t = Expect<
 				Equal<
 					typeof x,

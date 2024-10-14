@@ -46,12 +46,12 @@ class MatchExpression<input, output> {
 		private state: MatchState<output>,
 	) {}
 
-	with(...args: any[]): MatchExpression<input, output> {
+	with(...args: unknown[]): MatchExpression<input, output> {
 		if (this.state.matched) return this;
 
-		const handler: (selection: unknown, value: input) => output = args[args.size() - 1];
+		const handler: (selection: unknown, value: input) => output = args[args.size() - 1] as any;
 
-		const patterns: Pattern<input>[] = [args[0]];
+		const patterns: Pattern<input>[] = [args[0] as Pattern<input>];
 		let predicate: ((value: input) => unknown) | undefined = undefined;
 
 		if (args.size() === 3 && typeIs(args[1], "function")) {
@@ -60,18 +60,20 @@ class MatchExpression<input, output> {
 		} else if (args.size() > 2) {
 			// case with several patterns
 
-			(patterns as defined[]).push(...slice(args, 1, args.size() - 1));
+			for (const item of slice(args, 1, args.size() - 1)) {
+				(patterns as defined[]).push(item as defined);
+			}
 		}
 
 		let hasSelections = false;
 		let selected: Record<string, unknown> = {};
-		const select = (key: string, value: unknown) => {
+		const select_ = (key: string, value: unknown) => {
 			hasSelections = true;
 			selected[key] = value;
 		};
 
 		const matched =
-			(patterns as defined[]).some((pattern) => matchPattern(pattern, this.input, select)) &&
+			(patterns as defined[]).some((pattern) => matchPattern(pattern, this.input, select_)) &&
 			(predicate ? predicate(this.input) : true);
 
 		const selections = hasSelections

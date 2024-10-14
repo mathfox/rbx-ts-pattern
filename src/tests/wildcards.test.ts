@@ -8,7 +8,7 @@ import { NaN } from "@rbxts/phantom/src/Number";
 
 describe("wildcards", () => {
 	it("should match String wildcards", () => {
-		const res = match<string | number | boolean | null | undefined>("")
+		const res = match<string | number | boolean | undefined>("")
 			.with(NaN, () => "")
 			.with(P.string_, (x) => {
 				type t = Expect<Equal<typeof x, string>>;
@@ -20,7 +20,7 @@ describe("wildcards", () => {
 	});
 
 	it("should match Number wildcards", () => {
-		const res = match<string | number | boolean | null | undefined>(2)
+		const res = match<string | number | boolean | undefined>(2)
 			.with(P.number, (x) => {
 				type t = Expect<Equal<typeof x, number>>;
 				return true;
@@ -31,7 +31,7 @@ describe("wildcards", () => {
 	});
 
 	it("should match Boolean wildcards", () => {
-		const res = match<string | number | boolean | null | undefined>(true)
+		const res = match<string | number | boolean | undefined>(true)
 			.with(P.boolean, (x) => {
 				type t = Expect<Equal<typeof x, boolean>>;
 				return true;
@@ -42,16 +42,16 @@ describe("wildcards", () => {
 	});
 
 	it("should match nullish wildcard", () => {
-		const res = match<string | number | boolean | null | undefined>(null)
+		const res = match<string | number | boolean | undefined>(undefined)
 			.with(P.nullish, (x) => {
-				type t = Expect<Equal<typeof x, null | undefined>>;
+				type t = Expect<Equal<typeof x, undefined>>;
 				return true;
 			})
 			.otherwise(() => false);
 
-		const res2 = match<string | number | boolean | null | undefined>(undefined)
+		const res2 = match<string | number | boolean | undefined>(undefined)
 			.with(P.nullish, (x) => {
-				type t = Expect<Equal<typeof x, null | undefined>>;
+				type t = Expect<Equal<typeof x, undefined>>;
 				return true;
 			})
 			.otherwise(() => false);
@@ -62,7 +62,7 @@ describe("wildcards", () => {
 
 	describe("P.nonNullable", () => {
 		it("should narrow primitive types correctly", () => {
-			type Input = string | number | boolean | null | undefined;
+			type Input = string | number | boolean | undefined;
 			const res = match<Input>(false)
 				.with(P.nonNullable, (x) => {
 					type t = Expect<Equal<typeof x, string | number | boolean>>;
@@ -111,7 +111,7 @@ describe("wildcards", () => {
 		});
 
 		it("combined with exhaustive, it should consider all values except null and undefined to be handled", () => {
-			const fn1 = (input: string | number | null | undefined) =>
+			const fn1 = (input: string | number | undefined) =>
 				match(input)
 					.with(P.nonNullable, (x) => {
 						type t = Expect<Equal<typeof x, string | number>>;
@@ -120,13 +120,13 @@ describe("wildcards", () => {
 					// should type-check
 					.exhaustive();
 
-			const fn2 = (input: { nested: string | number | null | undefined }) =>
+			const fn2 = (input: { nested: string | number | undefined }) =>
 				match(input)
 					.with({ nested: P.nonNullable }, (x) => {
 						type t = Expect<Equal<typeof x, { nested: string | number }>>;
 					})
 					.with({ nested: P.nullish }, (x) => {
-						type t = Expect<Equal<typeof x, { nested: null | undefined }>>;
+						type t = Expect<Equal<typeof x, { nested: undefined }>>;
 					})
 					// should type-check
 					.exhaustive();
@@ -156,7 +156,7 @@ describe("wildcards", () => {
 
 	it("should infer correctly negated String wildcards", () => {
 		const res = match<string | number | boolean>("")
-			.with(P.not(P.string_), (x) => {
+			.with(P.not_(P.string_), (x) => {
 				type t = Expect<Equal<typeof x, number | boolean>>;
 				return true;
 			})
@@ -167,7 +167,7 @@ describe("wildcards", () => {
 
 	it("should infer correctly negated Number wildcards", () => {
 		const res = match<string | number | boolean>(2)
-			.with(P.not(P.number), (x) => {
+			.with(P.not_(P.number), (x) => {
 				type t = Expect<Equal<typeof x, string | boolean>>;
 				return true;
 			})
@@ -178,7 +178,7 @@ describe("wildcards", () => {
 
 	it("should infer correctly negated Boolean wildcards", () => {
 		const res = match<string | number | boolean>(true)
-			.with(P.not(P.boolean), (x) => {
+			.with(P.not_(P.boolean), (x) => {
 				type t = Expect<Equal<typeof x, string | number>>;
 				return true;
 			})
@@ -204,7 +204,7 @@ describe("wildcards", () => {
 		const allValueTypes = [2, "string", true, () => {}, {}, [], new Map(), new Set()];
 
 		allValueTypes.forEach((value) => {
-			it(`should match ${typeof value} values`, () => {
+			it(`should match ${typeOf(value)} values`, () => {
 				expect(
 					match(value)
 						.with(P._, () => "yes")

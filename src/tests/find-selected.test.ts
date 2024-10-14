@@ -313,11 +313,9 @@ describe("FindSelected", () => {
 				type cases = [
 					Expect<Equal<FindSelected<Input, { type: "text" }>, Input>>,
 					Expect<Equal<FindSelected<{ text: any }, { text: "text" }>, { text: any }>>,
-					Expect<Equal<FindSelected<{ text: any }, { str: NotP<null | undefined, null | undefined> }>, { text: any }>>,
+					Expect<Equal<FindSelected<{ text: any }, { str: NotP<undefined, undefined> }>, { text: any }>>,
 					Expect<Equal<FindSelected<{ text: unknown }, { text: "text" }>, { text: unknown }>>,
-					Expect<
-						Equal<FindSelected<{ text: unknown }, { str: NotP<null | undefined, null | undefined> }>, { text: unknown }>
-					>,
+					Expect<Equal<FindSelected<{ text: unknown }, { str: NotP<undefined, undefined> }>, { text: unknown }>>,
 				];
 			});
 

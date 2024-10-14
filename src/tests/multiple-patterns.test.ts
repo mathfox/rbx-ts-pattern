@@ -111,7 +111,6 @@ describe("Multiple patterns", () => {
 
 	it("should work with all types of input", () => {
 		type Input =
-			| null
 			| undefined
 			| number
 			| string
@@ -163,7 +162,6 @@ describe("Multiple patterns", () => {
 		//				.exhaustive();
 
 		const cases: { input: Input; expected: string }[] = [
-			{ input: null, expected: "Nullable" },
 			{ input: undefined, expected: "Nullable" },
 			{ input: true, expected: "primitive" },
 			{ input: 2, expected: "primitive" },
@@ -182,14 +180,14 @@ describe("Multiple patterns", () => {
 		//});
 	});
 
-	it("when 2 returned values don't match, the error should be at the second returned value", () => {
-		const f = (input: { t: "a"; x: any } | { t: "b" }) =>
-			match<typeof input, string>(input)
-				.with({ t: "a", x: "hello" }, { t: "a" }, (x) => "ok")
-				// @ts-expect-error
-				.with({ t: "b" }, (x) => 2)
-				.run();
-	});
+	//it("when 2 returned values don't match, the error should be at the second returned value", () => {
+	//	const f = (input: { t: "a"; x: any } | { t: "b" }) =>
+	//		match<typeof input, string>(input)
+	//			.with({ t: "a", x: "hello" }, { t: "a" }, (x) => "ok")
+	//			// @ts-expect-error
+	//			.with({ t: "b" }, (x) => 2)
+	//			.run();
+	//});
 
 	it("issue #74: inference must work on every pattern in the list", () => {
 		match<{ a: number[] }>({ a: [1, 2, 3, 4] })

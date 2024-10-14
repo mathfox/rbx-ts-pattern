@@ -22,7 +22,7 @@ describe("Numbers", () => {
 	});
 
 	it("P.number should match NaN", () => {
-		const val: number | null = NaN;
+		const val: number = NaN;
 		const res = match(val)
 			.with(P.nullish, () => "bad")
 			.with(1, () => "bad")
@@ -33,7 +33,7 @@ describe("Numbers", () => {
 	});
 
 	it("NaN should match NaN specially", () => {
-		const val: number | null = NaN;
+		const val: number = NaN;
 		const res = match(val)
 			.with(P.nullish, () => "bad")
 			.with(1, () => "bad")

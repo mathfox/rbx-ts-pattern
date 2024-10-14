@@ -110,7 +110,7 @@ export type IntersectObjects<a> = (a extends any ? keyof a : never) extends infe
 
 export type WithDefault<a, def> = [a] extends [never] ? def : a;
 
-export type IsLiteral<a> = [a] extends [null | undefined]
+export type IsLiteral<a> = [a] extends [undefined]
 	? true
 	: [a] extends [string]
 		? string extends a

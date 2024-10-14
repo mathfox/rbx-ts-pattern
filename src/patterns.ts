@@ -167,7 +167,7 @@ const variadic = <pattern extends {}>(pattern: pattern): Variadic<pattern> => {
 function arrayChainable<pattern extends Matcher<any, any, any, any, any>>(pattern: pattern): ArrayChainable<pattern> {
 	return assign(variadic(pattern), {
 		optional: () => arrayChainable(optional(pattern)),
-		select: (key: any) => arrayChainable(key === undefined ? select_(pattern) : select_(key, pattern)),
+		select: (key: unknown) => arrayChainable(key === undefined ? select_(pattern) : select_(key as any, pattern)),
 	}) as any;
 }
 
@@ -230,11 +230,11 @@ export function array<input>(): ArrayChainable<ArrayP<input, unknown>>;
 export function array<input, const pattern extends Pattern<WithDefault<UnwrapArray<input>, unknown>>>(
 	pattern: pattern,
 ): ArrayChainable<ArrayP<input, pattern>>;
-export function array(...args: [pattern?: any]): ArrayChainable<ArrayP<any, any>> {
+export function array(...args: [pattern?: unknown]): ArrayChainable<ArrayP<any, any>> {
 	return arrayChainable({
 		[matcher]() {
 			return {
-				match: (value: any) => {
+				match: (value: unknown) => {
 					if (!isArray(value)) return { matched: false };
 
 					if (args.size() === 0) return { matched: true };
@@ -459,18 +459,18 @@ export function union<input, const patterns extends readonly [Pattern<input>, ..
 }
 
 /**
- * `P.not(pattern)` returns a pattern which matches if the sub pattern
+ * `P.not_(pattern)` returns a pattern which matches if the sub pattern
  * doesn't match.
  *
  * [Read the documentation for `P.not` on GitHub](https://github.com/gvergnaud/ts-pattern#pnot-patterns)
  *
  * @example
  *  match<{ a: string | number }>(value)
- *   .with({ a: P.not(P.string_) }, (x) => 'will match { a: number }'
+ *   .with({ a: P.not_(P.string_) }, (x) => 'will match { a: number }'
  *   )
  */
 
-export function not<input, const pattern extends Pattern<input> | UnknownPattern>(
+export function not_<input, const pattern extends Pattern<input> | UnknownPattern>(
 	pattern: pattern,
 ): Chainable<NotP<input, pattern>> {
 	return chainable({
@@ -505,11 +505,13 @@ export function when<input, predicate extends (value: input) => unknown>(
 	predicate: predicate,
 ): GuardP<input, predicate extends (value: any) => value is infer narrowed ? narrowed : never> {
 	return {
-		[matcher]: () => ({
-			match: <UnknownInput>(value: UnknownInput | input) => ({
-				matched: !!predicate(value as input),
-			}),
-		}),
+		[matcher]() {
+			return {
+				match: <UnknownInput>(value: UnknownInput | input) => ({
+					matched: !!predicate(value as input),
+				}),
+			};
+		},
 	};
 }
 
@@ -541,8 +543,8 @@ export function select_<
 export function select_(
 	...args: [keyOrPattern?: unknown | string, pattern?: unknown]
 ): Chainable<SelectP<string>, "select" | "or" | "and"> {
-	const key: string | undefined = typeof args[0] === "string" ? args[0] : undefined;
-	const pattern: unknown = args.length === 2 ? args[1] : typeof args[0] === "string" ? undefined : args[0];
+	const key: string | undefined = typeIs(args[0], "string") ? args[0] : undefined;
+	const pattern: unknown = args.size() === 2 ? args[1] : typeIs(args[0], "string") ? undefined : args[0];
 	return chainable({
 		[matcher]() {
 			return {
