@@ -1,6 +1,6 @@
 {
 	"name": "ts-pattern",
 	"tree": {
-		"$path": "src"
+		"$path": "out"
 	}
 }
