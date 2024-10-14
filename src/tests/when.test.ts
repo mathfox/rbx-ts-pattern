@@ -121,7 +121,7 @@ describe("when", () => {
 							},
 						)
 						.with(
-							{ status: "success", data: P.select("data") },
+							{ status: "success", data: P.select_("data") },
 							(x) => x.data.size() > 3 && x.data.size() < 10,
 							(x) => {
 								type t = Expect<Equal<typeof x, { data: string }>>;
@@ -129,7 +129,7 @@ describe("when", () => {
 							},
 						)
 						.with(
-							{ status: "success", data: P.select("data") },
+							{ status: "success", data: P.select_("data") },
 							(x) => x.data.size() > 3 && x.data.size() < 10 && x.data.size() % 2,
 							(x) => {
 								type t = Expect<Equal<typeof x, { data: string }>>;
@@ -269,7 +269,7 @@ describe("when", () => {
 					{
 						type: "some",
 						value: {
-							list: P.array({ test: "a", prop: P.select() }),
+							list: P.array({ test: "a", prop: P.select_() }),
 						},
 					},
 					(x) => {

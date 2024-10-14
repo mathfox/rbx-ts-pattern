@@ -134,7 +134,7 @@ describe("variadic tuples ([a, ...b[]])", () => {
 			it("[1, sel, 2, ...number[]]", () => {
 				const f = (xs: unknown[]) =>
 					match(xs)
-						.with([1, P.select(P.number), 2, ...P.array(P.number)], (sel) => sel)
+						.with([1, P.select_(P.number), 2, ...P.array(P.number)], (sel) => sel)
 						.otherwise(() => "no");
 
 				expect(f([1, 42, 2, 3])).toEqual(42);
@@ -143,7 +143,7 @@ describe("variadic tuples ([a, ...b[]])", () => {
 			it("[1, 2, ...sel(number)[]]", () => {
 				const f = (xs: unknown[]) =>
 					match(xs)
-						.with([1, 2, ...P.array(P.select(P.number))], (sel) => sel)
+						.with([1, 2, ...P.array(P.select_(P.number))], (sel) => sel)
 						.otherwise(() => "no");
 
 				expect(f([1, 2, 3, 4])).toEqual([3, 4]);
@@ -152,7 +152,7 @@ describe("variadic tuples ([a, ...b[]])", () => {
 			it("[...sel(number)[], 1, 2]", () => {
 				const f = (xs: unknown[]) =>
 					match(xs)
-						.with([...P.array(P.select(P.number)), 1, 2], (sel) => sel)
+						.with([...P.array(P.select_(P.number)), 1, 2], (sel) => sel)
 						.otherwise(() => "no");
 
 				expect(f([3, 4, 1, 2])).toEqual([3, 4]);
@@ -162,7 +162,7 @@ describe("variadic tuples ([a, ...b[]])", () => {
 				const f = (xs: unknown[]) =>
 					match(xs)
 						.with(
-							[P.select("a", P.number), ...P.array(P.select("b", P.number)), P.select("c", P.string_)],
+							[P.select_("a", P.number), ...P.array(P.select_("b", P.number)), P.select_("c", P.string_)],
 							(sel) => sel,
 						)
 						.otherwise(() => "no");
@@ -304,99 +304,99 @@ describe("variadic tuples ([a, ...b[]])", () => {
 			const xs: (string | number)[] = [1, 2, 3, "a", "b", "c"];
 
 			match(xs)
-				.with([P.select(), ...P.array()], (xs) => {
+				.with([P.select_(), ...P.array()], (xs) => {
 					type t = Expect<Equal<typeof xs, string | number>>;
 					return [];
 				})
 				.otherwise(() => []);
 
 			match(xs)
-				.with([...P.array(P.select()), 7], (xs) => {
+				.with([...P.array(P.select_()), 7], (xs) => {
 					type t = Expect<Equal<typeof xs, (string | number)[]>>;
 					return [];
 				})
 				.otherwise(() => []);
 
 			match(xs)
-				.with([42, ...P.array(P.select(P.number))], (xs) => {
+				.with([42, ...P.array(P.select_(P.number))], (xs) => {
 					type t = Expect<Equal<typeof xs, number[]>>;
 					return [];
 				})
 				.otherwise(() => []);
 
 			match(xs)
-				.with([P.select("head", 42), ...P.array(P.select("tail", P.number))], (xs) => {
+				.with([P.select_("head", 42), ...P.array(P.select_("tail", P.number))], (xs) => {
 					type t = Expect<Equal<typeof xs, { tail: number[]; head: 42 }>>;
 					return [];
 				})
 				.otherwise(() => []);
 
 			match(xs)
-				.with([1, 2, ...P.array(P.select(P.number))], (xs) => {
+				.with([1, 2, ...P.array(P.select_(P.number))], (xs) => {
 					type t = Expect<Equal<typeof xs, number[]>>;
 					return [];
 				})
 				.otherwise(() => []);
 
-			match(xs).with([P.select("a", 1), P.select("b", 2), ...P.array(P.select("c", P.number))], (xs) => {
+			match(xs).with([P.select_("a", 1), P.select_("b", 2), ...P.array(P.select_("c", P.number))], (xs) => {
 				type t = Expect<Equal<typeof xs, { c: number[]; a: 1; b: 2 }>>;
 				return [];
 			});
 			match(xs)
-				.with([1, P.select(2), ...P.array(P.number)], (xs) => {
+				.with([1, P.select_(2), ...P.array(P.number)], (xs) => {
 					type t = Expect<Equal<typeof xs, 2>>;
 					return [];
 				})
 				.otherwise(() => []);
 
 			match(xs)
-				.with([...P.array(P.select(P.string_)), "a"], (xs) => {
+				.with([...P.array(P.select_(P.string_)), "a"], (xs) => {
 					type t = Expect<Equal<typeof xs, string[]>>;
 					return [];
 				})
 				.otherwise(() => []);
 
-			match(xs).with([...P.array(P.select("inits", P.string_)), P.select("last", "a")], (xs) => {
+			match(xs).with([...P.array(P.select_("inits", P.string_)), P.select_("last", "a")], (xs) => {
 				type t = Expect<Equal<typeof xs, { inits: string[]; last: "a" }>>;
 				return [];
 			});
 			match(xs)
-				.with([...P.array(P.string_), P.select()], (xs) => {
+				.with([...P.array(P.string_), P.select_()], (xs) => {
 					type t = Expect<Equal<typeof xs, string | number>>;
 					return [];
 				})
 				.otherwise(() => []);
 
 			match(xs)
-				.with([...P.array(P.select(P.string_)), "a", "b"], (xs) => {
+				.with([...P.array(P.select_(P.string_)), "a", "b"], (xs) => {
 					type t = Expect<Equal<typeof xs, string[]>>;
 					return [];
 				})
 				.otherwise(() => []);
 
 			match(xs)
-				.with([...P.array(P.string_), P.select(2), "b"], (xs) => {
+				.with([...P.array(P.string_), P.select_(2), "b"], (xs) => {
 					type t = Expect<Equal<typeof xs, 2>>;
 					return [];
 				})
 				.otherwise(() => []);
 
 			match(xs)
-				.with([...P.array(P.select("a", P.string_)), P.select("b", 2), P.select("c", "b")], (xs) => {
+				.with([...P.array(P.select_("a", P.string_)), P.select_("b", 2), P.select_("c", "b")], (xs) => {
 					type t = Expect<Equal<typeof xs, { a: string[]; b: 2; c: "b" }>>;
 					return [];
 				})
 				.otherwise(() => []);
 
 			match(xs)
-				.with([42, ...P.array(P.select(P.number)), "!"], (xs) => {
+				.with([42, ...P.array(P.select_(P.number)), "!"], (xs) => {
 					type t = Expect<Equal<typeof xs, number[]>>;
 					return [];
 				})
 				.otherwise(() => []);
 
 			//match(xs)
-			//	.with([P.select("a", 42), ...P.array(P.number.select("b")), P.select("c", "!")], (xs) => {
+			//	.with([P.select_("a", 42), ...P.array(P.number.select("b")), P.select_("c", "!")], (xs) => {
 			//		type t = Expect<Equal<typeof xs, { b: number[]; a: 42; c: "!" }>>;
 			//		return [];
 			//	})

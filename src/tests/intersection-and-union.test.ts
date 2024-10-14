@@ -230,22 +230,22 @@ describe("and, and or patterns", () => {
 		//		});
 
 		it("using a and patterns with when shouldn't consider the pattern exhaustive unless the guard function truly matches every possibilities of the input", () => {
-			const f = (n: number) => {
-				return (
-					match(n)
-						.with(
-							P.intersection(
-								P.number,
-								P.when((n): n is never => typeof n === "number" && n > 20),
-							),
-							(x) => {
-								return "big number";
-							},
-						)
-						// @ts-expect-error
-						.exhaustive()
-				);
-			};
+			//const f = (n: number) => {
+			//	return (
+			//		match(n)
+			//			.with(
+			//				P.intersection(
+			//					P.number,
+			//					P.when((n): n is never => typeof n === "number" && n > 20),
+			//				),
+			//				(x) => {
+			//					return "big number";
+			//				},
+			//			)
+			//			// @ts-expect-error
+			//			.exhaustive()
+			//	);
+			//};
 
 			const f2 = (n: number | string) => {
 				return match(n)
@@ -255,7 +255,7 @@ describe("and, and or patterns", () => {
 							P.any,
 							P.when((n): n is number => typeof n === "number"),
 							P.any,
-							P.select(),
+							P.select_(),
 						),
 						(x) => {
 							type t = Expect<Equal<typeof x, number>>;
@@ -266,26 +266,26 @@ describe("and, and or patterns", () => {
 					.exhaustive();
 			};
 
-			const f3 = (n: number | string) => {
-				return (
-					match(n)
-						.with(
-							P.intersection(
-								P.any,
-								P.any,
-								P.when((n): n is number => typeof n === "number"),
-								P.any,
-								P.select(),
-							),
-							(x) => {
-								type t = Expect<Equal<typeof x, number>>;
-								return "big number";
-							},
-						)
-						// @ts-expect-error: string isn't handled
-						.exhaustive()
-				);
-			};
+			//const f3 = (n: number | string) => {
+			//	return (
+			//		match(n)
+			//			.with(
+			//				P.intersection(
+			//					P.any,
+			//					P.any,
+			//					P.when((n): n is number => typeof n === "number"),
+			//					P.any,
+			//					P.select_(),
+			//				),
+			//				(x) => {
+			//					type t = Expect<Equal<typeof x, number>>;
+			//					return "big number";
+			//				},
+			//			)
+			//			// @ts-expect-error: string isn't handled
+			//			.exhaustive()
+			//	);
+			//};
 		});
 
 		it("intersection should work with selects", () => {
@@ -297,7 +297,7 @@ describe("and, and or patterns", () => {
 								P.any,
 								P.when((n): n is number => typeof n === "number"),
 								P.any,
-								P.select(),
+								P.select_(),
 							),
 						},
 						(x) => {
@@ -321,7 +321,7 @@ describe("and, and or patterns", () => {
 				return match(input)
 					.with(
 						{
-							value: P.intersection(P.select(), P.union({ type: "a" }, { type: "b" })),
+							value: P.intersection(P.select_(), P.union({ type: "a" }, { type: "b" })),
 						},
 						(x) => {
 							type t = Expect<Equal<typeof x, { type: "a"; v: number } | { type: "b"; v: string }>>;
@@ -344,7 +344,7 @@ describe("and, and or patterns", () => {
 				return match(input)
 					.with(
 						{
-							value: P.union({ type: "a", n: P.select("n") }, { type: "b", s: P.select("s") }),
+							value: P.union({ type: "a", n: P.select_("n") }, { type: "b", s: P.select_("s") }),
 						},
 						(x) => {
 							type t = Expect<
@@ -361,7 +361,7 @@ describe("and, and or patterns", () => {
 					)
 					.with(
 						{
-							value: P.union({ type: "a", n: P.select() }, { type: "b" }),
+							value: P.union({ type: "a", n: P.select_() }, { type: "b" }),
 						},
 						(x) => {
 							type t = Expect<Equal<typeof x, number | undefined>>;

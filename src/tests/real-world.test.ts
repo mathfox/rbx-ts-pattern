@@ -10,7 +10,7 @@ describe("real world example of a complex input type", () => {
 				{
 					viz: "timeseries",
 					requests: P.array({
-						queries: P.array(P.union({ data_source: "metrics", query: P.select() }, P.any)),
+						queries: P.array(P.union({ data_source: "metrics", query: P.select_() }, P.any)),
 					}),
 				},
 				(metricQueries) => {
@@ -20,7 +20,7 @@ describe("real world example of a complex input type", () => {
 			)
 			.with(
 				{
-					requests: [{ sql_query: P.select() }],
+					requests: [{ sql_query: P.select_() }],
 					viz: "wildcard",
 					specification: {
 						type: "vega",
@@ -90,8 +90,8 @@ describe("real world example of a complex input type", () => {
 				() => "formulas requests",
 			)
 			.with({ style: P.optional({ palette_flip: true }) }, (withPalette) => withPalette.viz)
-			.with({ requests: P.array({ sql_query: P.select() }) }, (queries) => queries)
-			.with({ viz: "geomap", requests: P.array({ response_format: P.select() }) }, (scalars) => scalars)
+			.with({ requests: P.array({ sql_query: P.select_() }) }, (queries) => queries)
+			.with({ viz: "geomap", requests: P.array({ response_format: P.select_() }) }, (scalars) => scalars)
 			.with(
 				{
 					viz: P.union("geomap", "timeseries", "heatmap", "scatterplot", "query_table"),

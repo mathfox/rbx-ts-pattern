@@ -48,17 +48,17 @@ describe("optional", () => {
 
 		const input = { type: "b" } as Input;
 
-		match(input).with({ type: "a", a: P.optional({ name: P.select() }) }, (x) => {
+		match(input).with({ type: "a", a: P.optional({ name: P.select_() }) }, (x) => {
 			type t = Expect<Equal<typeof x, string | undefined>>;
 			return x;
 		});
 
-		match(input).with({ type: "a", a: P.select().optional() }, (x) => {
+		match(input).with({ type: "a", a: P.select_().optional() }, (x) => {
 			type t = Expect<Equal<typeof x, { name: string; age: number } | undefined>>;
 			return x;
 		});
 
-		match(input).with({ type: "b", b: P.select(P.optional(P.union("test"))) }, (x) => {
+		match(input).with({ type: "b", b: P.select_(P.optional(P.union("test"))) }, (x) => {
 			type t = Expect<Equal<typeof x, "test" | undefined>>;
 			return x;
 		});
@@ -81,11 +81,11 @@ describe("optional", () => {
 
 		const f = (input: Input) =>
 			match(input)
-				.with({ type: "a", a: P.optional({ name: P.select() }) }, (x) => {
+				.with({ type: "a", a: P.optional({ name: P.select_() }) }, (x) => {
 					type t = Expect<Equal<typeof x, string | undefined>>;
 					return x;
 				})
-				.with({ type: "b", b: P.optional(P.select(P.union("test"))) }, (x) => {
+				.with({ type: "b", b: P.optional(P.select_(P.union("test"))) }, (x) => {
 					type t = Expect<Equal<typeof x, "test" | undefined>>;
 					return x;
 				})
@@ -102,7 +102,7 @@ describe("optional", () => {
 			match<Input>({})
 				.with(
 					{
-						a: P.optional({ name: P.select("name"), age: P.select("age") }),
+						a: P.optional({ name: P.select_("name"), age: P.select_("age") }),
 					},
 					({ name, age }) => {
 						type t1 = Expect<Equal<typeof name, string | undefined>>;
@@ -144,7 +144,7 @@ describe("optional", () => {
 				.with(
 					{
 						type: "a",
-						data: P.optional({ type: "text", p: P.select("p") }),
+						data: P.optional({ type: "text", p: P.select_("p") }),
 					},
 					(x) => {
 						type t = Expect<Equal<typeof x, { p: string | undefined }>>;
@@ -154,7 +154,7 @@ describe("optional", () => {
 				.with(
 					{
 						type: "b",
-						data: P.optional({ type: "video", src: P.select("src") }),
+						data: P.optional({ type: "video", src: P.select_("src") }),
 					},
 					({ src }) => {
 						type t = Expect<Equal<typeof src, number | undefined>>;
@@ -164,7 +164,7 @@ describe("optional", () => {
 				.with(
 					{
 						type: "b",
-						data: P.optional({ type: "gif", p: P.select("p") }),
+						data: P.optional({ type: "gif", p: P.select_("p") }),
 					},
 					({ p }) => {
 						type t = Expect<Equal<typeof p, string | undefined>>;
@@ -180,7 +180,7 @@ describe("optional", () => {
 
 		const f = (input: Input) =>
 			match(input)
-				.with({ maybeList: P.optional(P.array({ text: P.select() })) }, (x) => {
+				.with({ maybeList: P.optional(P.array({ text: P.select_() })) }, (x) => {
 					type t = Expect<Equal<typeof x, string[] | undefined>>;
 					return x;
 				})

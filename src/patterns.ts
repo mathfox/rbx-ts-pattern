@@ -113,9 +113,9 @@ export type narrow<input, pattern extends Pattern<any>> = ExtractPreciseValue<in
 function chainable<pattern extends Matcher<any, any, any, any, any>>(pattern: pattern): Chainable<pattern> {
 	return assign(pattern, {
 		optional: () => optional(pattern),
-		and: (p2: any) => intersection(pattern, p2),
-		or: (p2: any) => union(pattern, p2),
-		select: (key: any) => (key === undefined ? select(pattern) : select(key, pattern)),
+		and: (p2: unknown) => intersection(pattern, p2 as any),
+		or: (p2: unknown) => union(pattern, p2 as any),
+		select: (key: unknown) => (key === undefined ? select_(pattern) : select_(key as any, pattern)),
 	}) as Chainable<pattern>;
 }
 
@@ -167,7 +167,7 @@ const variadic = <pattern extends {}>(pattern: pattern): Variadic<pattern> => {
 function arrayChainable<pattern extends Matcher<any, any, any, any, any>>(pattern: pattern): ArrayChainable<pattern> {
 	return assign(variadic(pattern), {
 		optional: () => arrayChainable(optional(pattern)),
-		select: (key: any) => arrayChainable(key === undefined ? select(pattern) : select(key, pattern)),
+		select: (key: any) => arrayChainable(key === undefined ? select_(pattern) : select_(key, pattern)),
 	}) as any;
 }
 
@@ -514,18 +514,18 @@ export function when<input, predicate extends (value: input) => unknown>(
 }
 
 /**
- * `P.select()` is a pattern which will always match,
+ * `P.select_()` is a pattern which will always match,
  * and will inject the selected piece of input in the handler function.
  *
- * [Read the documentation for `P.select` on GitHub](https://github.com/gvergnaud/ts-pattern#pselect-patterns)
+ * [Read the documentation for `P.select_` on GitHub](https://github.com/gvergnaud/ts-pattern#pselect-patterns)
  *
  * @example
  *  match<{ age: number }>(value)
- *   .with({ age: P.select() }, (age) => 'age: number'
+ *   .with({ age: P.select_() }, (age) => 'age: number'
  *   )
  */
-export function select(): Chainable<AnonymousSelectP, "select" | "or" | "and">;
-export function select<
+export function select_(): Chainable<AnonymousSelectP, "select" | "or" | "and">;
+export function select_<
 	input,
 	const patternOrKey extends string | (unknown extends input ? UnknownPattern : Pattern<input>),
 >(
@@ -533,12 +533,12 @@ export function select<
 ): patternOrKey extends string
 	? Chainable<SelectP<patternOrKey, "select" | "or" | "and">>
 	: Chainable<SelectP<symbols.anonymousSelectKey, input, patternOrKey>, "select" | "or" | "and">;
-export function select<
+export function select_<
 	input,
 	const pattern extends unknown extends input ? UnknownPattern : Pattern<input>,
 	const k extends string,
 >(key: k, pattern: pattern): Chainable<SelectP<k, input, pattern>, "select" | "or" | "and">;
-export function select(
+export function select_(
 	...args: [keyOrPattern?: unknown | string, pattern?: unknown]
 ): Chainable<SelectP<string>, "select" | "or" | "and"> {
 	const key: string | undefined = typeof args[0] === "string" ? args[0] : undefined;

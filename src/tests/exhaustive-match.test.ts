@@ -187,11 +187,11 @@ describe("exhaustive()", () => {
 			//				.exhaustive();
 
 			match(input)
-				.with({ type: 1, data: P.select() }, (data) => {
+				.with({ type: 1, data: P.select_() }, (data) => {
 					type t = Expect<Equal<typeof data, number>>;
 					return 1;
 				})
-				.with({ type: "two", data: P.select() }, (data) => data.size())
+				.with({ type: "two", data: P.select_() }, (data) => data.size())
 				.with({ type: 3, data: true }, ({ data }) => {
 					type t = Expect<Equal<typeof data, true>>;
 					return 3;
@@ -403,7 +403,7 @@ describe("exhaustive()", () => {
 			const f = (n: number, state: State) => {
 				const x = match([n, state])
 					.with(
-						[1, { status: "success", data: P.select() }],
+						[1, { status: "success", data: P.select_() }],
 						([_, { data }]) => startsWith(data, "coucou"),
 						(data) => data.gsub("coucou", "bonjour")[0],
 					)
@@ -696,8 +696,8 @@ describe("exhaustive()", () => {
 			.with(
 				{
 					type: "text",
-					text: P.select("text"),
-					author: { name: P.select("authorName") },
+					text: P.select_("text"),
+					author: { name: P.select_("authorName") },
 				},
 				({ text, authorName }) => `${text} from ${authorName}`,
 			)
@@ -714,8 +714,8 @@ describe("exhaustive()", () => {
 				{
 					type: "movie",
 					duration: 10,
-					author: P.select("author"),
-					title: P.select("title"),
+					author: P.select_("author"),
+					title: P.select_("title"),
 				},
 				({ author, title }) => "",
 			)
@@ -731,8 +731,8 @@ describe("exhaustive()", () => {
 
 		const reducer = (state: State, event: Event): State =>
 			match<[State, Event], State>([state, event])
-				.with([{ status: "loading" }, { type: "success", data: P.select() }], (data) => ({ status: "success", data }))
-				.with([{ status: "loading" }, { type: "error", error: P.select() }], (error) => ({ status: "error", error }))
+				.with([{ status: "loading" }, { type: "success", data: P.select_() }], (data) => ({ status: "success", data }))
+				.with([{ status: "loading" }, { type: "error", error: P.select_() }], (error) => ({ status: "error", error }))
 				.with([{ status: "loading" }, { type: "cancel" }], () => initState)
 
 				.with([{ status: P.not("loading") }, { type: "fetch" }], (value) => ({
@@ -748,7 +748,7 @@ describe("exhaustive()", () => {
 		const input = { type: 3, data: 2 } as Input;
 
 		match<Input>(input)
-			.with({ type: 3, data: P.select() }, (data) => {
+			.with({ type: 3, data: P.select_() }, (data) => {
 				type t = Expect<Equal<typeof data, number>>;
 				return 3;
 			})
@@ -756,7 +756,7 @@ describe("exhaustive()", () => {
 
 		type Input2 = { type: 3; data: true } | 2;
 		match<Input2>(2)
-			.with({ type: 3, data: P.select() }, (data) => {
+			.with({ type: 3, data: P.select_() }, (data) => {
 				type t = Expect<Equal<typeof data, true>>;
 				return 3;
 			})

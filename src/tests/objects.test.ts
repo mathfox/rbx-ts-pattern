@@ -37,7 +37,7 @@ describe("Objects", () => {
 	//		it("narrowing inference should work", () => {
 	//			const fn1 = (input: Input) => {
 	//				return match(input)
-	//					.with({ [symbolA]: P.select() }, (sel) => {
+	//					.with({ [symbolA]: P.select_() }, (sel) => {
 	//						type t = Expect<Equal<typeof sel, { [symbolB]: "foo" | "bar" }>>;
 	//						return sel;
 	//					})
@@ -54,7 +54,7 @@ describe("Objects", () => {
 	//						type t = Expect<Equal<typeof sel, Input>>;
 	//						return sel;
 	//					})
-	//					.with({ [symbolC]: P.select() }, (x) => x)
+	//					.with({ [symbolC]: P.select_() }, (x) => x)
 	//					.exhaustive();
 	//			};
 	//

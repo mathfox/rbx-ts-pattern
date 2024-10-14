@@ -153,7 +153,7 @@ describe("Nesting", () => {
 																								a: {
 																									a: {
 																										foo: P.any,
-																										bar: P.select("bar"),
+																										bar: P.select_("bar"),
 																									},
 																								},
 																							},
@@ -185,7 +185,7 @@ describe("Nesting", () => {
 		it("it should work on 2 levels", () => {
 			expect(
 				match([{ two: "2", foo: 2, bar: true }])
-					.with([{ foo: P.any, bar: P.select("bar") }], ({ bar }) => bar)
+					.with([{ foo: P.any, bar: P.select_("bar") }], ({ bar }) => bar)
 					.exhaustive(),
 			).toEqual(true);
 		});
@@ -193,7 +193,7 @@ describe("Nesting", () => {
 		it("it should work on 3 levels", () => {
 			expect(
 				match([[{ two: "2", foo: 2, bar: true }]])
-					.with([[{ foo: P.any, bar: P.select("bar") }]], ({ bar }) => bar)
+					.with([[{ foo: P.any, bar: P.select_("bar") }]], ({ bar }) => bar)
 					.exhaustive(),
 			).toEqual(true);
 		});
@@ -201,7 +201,7 @@ describe("Nesting", () => {
 		it("it should work on 4 levels", () => {
 			expect(
 				match([[[{ two: "2", foo: 2, bar: true }]]])
-					.with([[[{ foo: P.any, bar: P.select("bar") }]]], ({ bar }) => bar)
+					.with([[[{ foo: P.any, bar: P.select_("bar") }]]], ({ bar }) => bar)
 					.exhaustive(),
 			).toEqual(true);
 		});
@@ -219,7 +219,7 @@ describe("Nesting", () => {
 				match([[[[[[[[[[[[[[[[[[{ two: "2", foo: 2, bar: true }]]]]]]]]]]]]]]]]]] as const)
 					.with(
 						// prettier-ignore
-						[[[[[[[[[[[[[[[[[[{ foo: P.any, bar: P.select("bar") }]]]]]]]]]]]]]]]]]],
+						[[[[[[[[[[[[[[[[[[{ foo: P.any, bar: P.select_("bar") }]]]]]]]]]]]]]]]]]],
 						({ bar }) => bar,
 					)
 					.exhaustive(),

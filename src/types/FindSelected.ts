@@ -118,7 +118,7 @@ export type MixedNamedAndAnonymousSelectError<
 
 export type SelectionToArgs<selections extends SelectionsRecord> = symbols.anonymousSelectKey extends keyof selections
 	? // if there are several different paths for anonymous selections
-		// it means that P.select() has been used more than once.
+		// it means that P.select_() has been used more than once.
 		IsUnion<selections[symbols.anonymousSelectKey][1]> extends true
 		? SeveralAnonymousSelectError
 		: keyof selections extends symbols.anonymousSelectKey

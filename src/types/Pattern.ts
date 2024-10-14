@@ -208,9 +208,9 @@ export type Chainable<p, omitted extends string = never> = p &
 			 */
 			or<input, p2 extends Pattern<input>>(pattern: p2): Chainable<OrP<input, [p, p2]>, omitted>;
 			/**
-			 * `P.select()` will inject this property into the handler function's arguments.
+			 * `P.select_()` will inject this property into the handler function's arguments.
 			 *
-			 * [Read the documentation for `P.select` on GitHub](https://github.com/gvergnaud/ts-pattern#pselect-patterns)
+			 * [Read the documentation for `P.select_` on GitHub](https://github.com/gvergnaud/ts-pattern#pselect-patterns)
 			 *
 			 * @example
 			 *  match<{ age: number }>(value)
@@ -454,9 +454,9 @@ export type ArrayChainable<pattern, omitted extends string = never> = Variadic<p
 			 */
 			optional<input>(): ArrayChainable<OptionalP<input, pattern>, omitted | "optional">;
 			/**
-			 * `P.select()` will inject this property into the handler function's arguments.
+			 * `P.select_()` will inject this property into the handler function's arguments.
 			 *
-			 * [Read the documentation for `P.select` on GitHub](https://github.com/gvergnaud/ts-pattern#pselect-patterns)
+			 * [Read the documentation for `P.select_` on GitHub](https://github.com/gvergnaud/ts-pattern#pselect-patterns)
 			 *
 			 * @example
 			 *  match<{ age: number }>(value)

@@ -171,7 +171,7 @@ describe("tuple ([a, b])", () => {
 		function update(state: State, msg: Msg) {
 			return match<[State, Msg], string>([state, msg])
 				.with([P.any, ["Login"]], () => "ok")
-				.with([P.any, ["UrlChange", P.select()]], () => "not ok")
+				.with([P.any, ["UrlChange", P.select_()]], () => "not ok")
 				.exhaustive();
 		}
 	});
