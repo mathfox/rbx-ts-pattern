@@ -1,5 +1,5 @@
 {
-	"name": "@rbxts/rbx-ts-pattern",
+	"name": "@rbxts/ts-pattern",
 	"version": "0.0.1",
 	"description": "ts-pattern adaption for roblox-ts",
 	"main": "out/init.luau",
