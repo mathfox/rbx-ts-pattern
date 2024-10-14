@@ -173,7 +173,7 @@ describe("when", () => {
 					)
 					.with(
 						P.any,
-						(x): x is number => typeof x === "number",
+						(x): x is number => typeIs(x, "number"),
 						(x) => {
 							type t = Expect<Equal<typeof x, number>>;
 							return "x: number";
@@ -347,7 +347,7 @@ describe("when", () => {
 				input | string, // input
 				Exclude<input, string>, // narrowed value
 				never // types excluded
-			>((x): x is Exclude<input, string> => typeof x !== "string");
+			>((x): x is Exclude<input, string> => !typeIs(x, "string"));
 
 		type Input = { prop: string | number };
 
