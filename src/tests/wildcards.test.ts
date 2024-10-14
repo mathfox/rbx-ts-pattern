@@ -10,7 +10,7 @@ describe("wildcards", () => {
 	it("should match String wildcards", () => {
 		const res = match<string | number | boolean | null | undefined>("")
 			.with(NaN, () => "")
-			.with(P.string, (x) => {
+			.with(P.string_, (x) => {
 				type t = Expect<Equal<typeof x, string>>;
 				return true;
 			})
@@ -141,11 +141,11 @@ describe("wildcards", () => {
 	//		}; /* API logic. */
 	//
 	//		const res = match<any, Blog >(httpResult)
-	//			.with({ id: P.number, title: P.string }, (r) => ({
+	//			.with({ id: P.number, title: P.string_ }, (r) => ({
 	//				id: r.id,
 	//				title: r.title,
 	//			}))
-	//			.with({ errorMessage: P.string }, (r) => new Error(r.errorMessage))
+	//			.with({ errorMessage: P.string_ }, (r) => new Error(r.errorMessage))
 	//			.otherwise(() => new Error("Client parse error"));
 	//
 	//		expect(res).toEqual({
@@ -156,7 +156,7 @@ describe("wildcards", () => {
 
 	it("should infer correctly negated String wildcards", () => {
 		const res = match<string | number | boolean>("")
-			.with(P.not(P.string), (x) => {
+			.with(P.not(P.string_), (x) => {
 				type t = Expect<Equal<typeof x, number | boolean>>;
 				return true;
 			})

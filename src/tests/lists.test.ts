@@ -14,7 +14,7 @@ describe("List ([a])", () => {
 				type t = Expect<Equal<typeof x, []>>;
 				return { kind: "some", value: [{ id: 0, title: "LOlol" }] };
 			})
-			.with(P.array({ id: P.number, title: P.string }), (blogs) => {
+			.with(P.array({ id: P.number, title: P.string_ }), (blogs) => {
 				type t = Expect<Equal<typeof blogs, { id: number; title: string }[]>>;
 				return {
 					kind: "some",
@@ -53,7 +53,7 @@ describe("List ([a])", () => {
 		];
 
 		const output = match<Input, string>(input)
-			.with(P.array({ title: P.string, content: P.string }), (posts) => "a list of posts!")
+			.with(P.array({ title: P.string_, content: P.string_ }), (posts) => "a list of posts!")
 			.otherwise(() => "something else");
 	});
 
@@ -61,7 +61,7 @@ describe("List ([a])", () => {
 		const fn = (input: { queries?: { q?: string[]; a: number }[] }) =>
 			match(input).with(
 				{
-					queries: P.array({ q: P.array(P.string) }),
+					queries: P.array({ q: P.array(P.string_) }),
 				},
 				(x) => {
 					type t = Expect<Equal<typeof x, { queries: { a: number; q: string[] }[] }>>;

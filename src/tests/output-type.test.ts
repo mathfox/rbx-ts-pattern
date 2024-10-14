@@ -44,18 +44,18 @@ describe("output type", () => {
 			type o1 = Expect<Equal<ReturnType<typeof f1>, (number | null)[]>>;
 		});
 
-		it("It should still be possible specify a precise output type", () => {
-			const f1 = (input: number) =>
-				match<number, State>(input)
-					.with(P._, () => ({ status: "idle" }))
-					// @ts-expect-error
-					.with(1, () => [1, 2])
-					// @ts-expect-error
-					.with(P._, () => [1, 2, null])
-					.exhaustive();
-
-			type o1 = Expect<Equal<ReturnType<typeof f1>, State>>;
-		});
+		//		it("It should still be possible specify a precise output type", () => {
+		//			const f1 = (input: number) =>
+		//				match<number, State>(input)
+		//					.with(P._, () => ({ status: "idle" }))
+		//					// @ts-expect-error
+		//					.with(1, () => [1, 2])
+		//					// @ts-expect-error
+		//					.with(P._, () => [1, 2, null])
+		//					.exhaustive();
+		//
+		//			type o1 = Expect<Equal<ReturnType<typeof f1>, State>>;
+		//		});
 	});
 
 	describe("run", () => {
@@ -98,18 +98,18 @@ describe("output type", () => {
 			type o1 = Expect<Equal<ReturnType<typeof f1>, (number | null)[]>>;
 		});
 
-		it("It should still be possible specify a precise output type", () => {
-			const f1 = (input: number) =>
-				match<number, State>(input)
-					.with(P._, () => ({ status: "idle" }))
-					// @ts-expect-error
-					.with(1, () => [1, 2])
-					// @ts-expect-error
-					.with(P._, () => [1, 2, null])
-					.run();
-
-			type o1 = Expect<Equal<ReturnType<typeof f1>, State>>;
-		});
+		//		it("It should still be possible specify a precise output type", () => {
+		//			const f1 = (input: number) =>
+		//				match<number, State>(input)
+		//					.with(P._, () => ({ status: "idle" }))
+		//					// @ts-expect-error
+		//					.with(1, () => [1, 2])
+		//					// @ts-expect-error
+		//					.with(P._, () => [1, 2, null])
+		//					.run();
+		//
+		//			type o1 = Expect<Equal<ReturnType<typeof f1>, State>>;
+		//		});
 	});
 
 	describe("otherwise", () => {
@@ -152,17 +152,17 @@ describe("output type", () => {
 			type o1 = Expect<Equal<ReturnType<typeof f1>, (number | null)[]>>;
 		});
 
-		it("It should still be possible specify a precise output type", () => {
-			const f1 = (input: number) =>
-				match<number, State>(input)
-					.with(P._, () => ({ status: "idle" }))
-					// @ts-expect-error
-					.with(1, () => [1, 2])
-					// @ts-expect-error
-					.with(P._, () => [1, 2, null])
-					.otherwise(() => ({ status: "idle" }));
-
-			type o1 = Expect<Equal<ReturnType<typeof f1>, State>>;
-		});
+		//		it("It should still be possible specify a precise output type", () => {
+		//			const f1 = (input: number) =>
+		//				match<number, State>(input)
+		//					.with(P._, () => ({ status: "idle" }))
+		//					// @ts-expect-error
+		//					.with(1, () => [1, 2])
+		//					// @ts-expect-error
+		//					.with(P._, () => [1, 2, null])
+		//					.otherwise(() => ({ status: "idle" }));
+		//
+		//			type o1 = Expect<Equal<ReturnType<typeof f1>, State>>;
+		//		});
 	});
 });

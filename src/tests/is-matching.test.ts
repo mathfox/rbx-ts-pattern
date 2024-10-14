@@ -10,8 +10,8 @@ describe("isMatching", () => {
 		};
 
 		const isBlogPost = isMatching({
-			title: P.string,
-			author: { name: P.string, age: P.number },
+			title: P.string_,
+			author: { name: P.string_, age: P.number },
 		});
 
 		if (isBlogPost(something)) {
@@ -30,8 +30,8 @@ describe("isMatching", () => {
 		if (
 			isMatching(
 				{
-					title: P.string,
-					author: { name: P.string, age: P.number },
+					title: P.string_,
+					author: { name: P.string_, age: P.number },
 				},
 				something,
 			)

@@ -28,12 +28,12 @@ const isOptionalPattern = (x: unknown): x is Matcher<unknown, unknown, "optional
 
 // tells us if the value matches a given pattern.
 // @internal
-export const matchPattern = (pattern: any, value: any, select: (key: string, value: unknown) => void): boolean => {
+export const matchPattern = (pattern: any, value: any, select_: (key: string, value: unknown) => void): boolean => {
 	if (isMatcher(pattern)) {
 		const matcher = pattern[symbols.matcher]();
 		const { matched, selections } = matcher.match(value);
 		if (matched && selections) {
-			keys(selections).forEach((key) => select(key, selections[key]));
+			keys(selections).forEach((key) => select_(key, selections[key]));
 		}
 		return matched;
 	}
@@ -77,25 +77,25 @@ export const matchPattern = (pattern: any, value: any, select: (key: string, val
 				);
 
 				return (
-					(startPatterns as defined[]).every((subPattern, i) => matchPattern(subPattern, startValues[i], select)) &&
-					(endPatterns as defined[]).every((subPattern, i) => matchPattern(subPattern, endValues[i], select)) &&
-					(variadicPatterns.size() === 0 ? true : matchPattern(variadicPatterns[0], middleValues, select))
+					(startPatterns as defined[]).every((subPattern, i) => matchPattern(subPattern, startValues[i], select_)) &&
+					(endPatterns as defined[]).every((subPattern, i) => matchPattern(subPattern, endValues[i], select_)) &&
+					(variadicPatterns.size() === 0 ? true : matchPattern(variadicPatterns[0], middleValues, select_))
 				);
 			}
 
 			return pattern.size() === value.size()
-				? (pattern as defined[]).every((subPattern, i) => matchPattern(subPattern, value[i], select))
+				? (pattern as defined[]).every((subPattern, i) => matchPattern(subPattern, value[i], select_))
 				: false;
 		}
 
 		return keys(pattern).every((k): boolean => {
 			const subPattern = pattern[k];
 
-			return (k in value || isOptionalPattern(subPattern)) && matchPattern(subPattern, value[k], select);
+			return (k in value || isOptionalPattern(subPattern)) && matchPattern(subPattern, value[k], select_);
 		});
 	}
 
-	return value === pattern;
+	return (value as unknown) === (pattern as unknown);
 };
 
 // @internal

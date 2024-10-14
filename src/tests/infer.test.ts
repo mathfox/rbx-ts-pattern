@@ -7,8 +7,8 @@ describe("P.infer", () => {
 		it("should correctly narrow types of arrays containing tuples", () => {
 			const QuizValue = P.union("initial", "correct", "incorrect");
 			const QuizState = {
-				answerEntries: P.array([P.string, QuizValue]),
-				appendOnlyAnswerEntries: P.array([P.string, P.array(QuizValue)]),
+				answerEntries: P.array([P.string_, QuizValue]),
+				appendOnlyAnswerEntries: P.array([P.string_, P.array(QuizValue)]),
 			};
 
 			type QuizValue = P.infer<typeof QuizValue>;

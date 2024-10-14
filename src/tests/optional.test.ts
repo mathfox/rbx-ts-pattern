@@ -31,10 +31,10 @@ describe("optional", () => {
 					type t = Expect<Equal<typeof x, { a?: { name: "Hello"; age: number } }>>;
 					return true;
 				})
-				.with({ b: P.string }, (x) => {
+				.with({ b: P.string_ }, (x) => {
 					return false;
 				})
-				.with({ a: { name: P.string } }, () => false)
+				.with({ a: { name: P.string_ } }, () => false)
 				.exhaustive();
 
 		// Not Hello

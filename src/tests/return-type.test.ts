@@ -7,7 +7,7 @@ describe("returnType", () => {
 			match(input)
 				.returnType<string>() // allowed
 				.with(undefined, () => "undefined")
-				.with(P.string, () => "string")
+				.with(P.string_, () => "string")
 				.otherwise(() => "unknown");
 
 		//		const f2 = (input: unknown) =>
@@ -15,13 +15,13 @@ describe("returnType", () => {
 		//				.with(undefined, () => "undefined")
 		//				// @ts-expect-error: not allowed
 		//				.returnType<string>()
-		//				.with(P.string, () => "string")
+		//				.with(P.string_, () => "string")
 		//				.otherwise(() => "unknown");
 		//
 		//		const f3 = (input: unknown) =>
 		//			match(input)
 		//				.with(undefined, () => "undefined")
-		//				.with(P.string, () => "string")
+		//				.with(P.string_, () => "string")
 		//				// @ts-expect-error: not allowed
 		//				.returnType<string>()
 		//				.otherwise(() => "unknown");
@@ -33,7 +33,7 @@ describe("returnType", () => {
 	//			.returnType<string>()
 	//			// @ts-expect-error
 	//			.with(undefined, () => undefined)
-	//			.with(P.string, () => "string")
+	//			.with(P.string_, () => "string")
 	//			// @ts-expect-error
 	//			.otherwise(() => true);
 	//});

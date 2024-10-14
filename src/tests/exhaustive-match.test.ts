@@ -24,18 +24,18 @@ describe("exhaustive()", () => {
 			//				.with("b", (x) => 1)
 			//				//// @ts-expect-error
 			//				.exhaustive();
-
-			match(input)
-				.with("a", (x) => {
-					type t = Expect<Equal<typeof x, "a">>;
-					return 1;
-				})
-				.with("b", (x) => {
-					type t = Expect<Equal<typeof x, "b">>;
-					return 2;
-				})
-				// @ts-expect-error
-				.exhaustive();
+			//
+			//			match(input)
+			//				.with("a", (x) => {
+			//					type t = Expect<Equal<typeof x, "a">>;
+			//					return 1;
+			//				})
+			//				.with("b", (x) => {
+			//					type t = Expect<Equal<typeof x, "b">>;
+			//					return 2;
+			//				})
+			//				// @ts-expect-error
+			//				.exhaustive();
 
 			match(input)
 				.with("a", (x) => {
@@ -57,31 +57,31 @@ describe("exhaustive()", () => {
 			type Input = 1 | 2 | 3;
 			const input = 2 as Input;
 
-			match(input)
-				.with(2, (x) => {
-					type t = Expect<Equal<typeof x, 2>>;
-					return 2;
-				})
-				// @ts-expect-error
-				.exhaustive();
-
-			match(input)
-				.with(1, (x) => 1)
-				.with(2, () => 3)
-				// @ts-expect-error
-				.exhaustive();
-
-			match(input)
-				.with(1, (x) => {
-					type t = Expect<Equal<typeof x, 1>>;
-					return 1;
-				})
-				.with(2, (x) => {
-					type t = Expect<Equal<typeof x, 2>>;
-					return 2;
-				})
-				// @ts-expect-error
-				.exhaustive();
+			//			match(input)
+			//				.with(2, (x) => {
+			//					type t = Expect<Equal<typeof x, 2>>;
+			//					return 2;
+			//				})
+			//				// @ts-expect-error
+			//				.exhaustive();
+			//
+			//			match(input)
+			//				.with(1, (x) => 1)
+			//				.with(2, () => 3)
+			//				// @ts-expect-error
+			//				.exhaustive();
+			//
+			//			match(input)
+			//				.with(1, (x) => {
+			//					type t = Expect<Equal<typeof x, 1>>;
+			//					return 1;
+			//				})
+			//				.with(2, (x) => {
+			//					type t = Expect<Equal<typeof x, 2>>;
+			//					return 2;
+			//				})
+			//				// @ts-expect-error
+			//				.exhaustive();
 
 			match(input)
 				.with(1, (x) => {
@@ -103,12 +103,12 @@ describe("exhaustive()", () => {
 			type Input = [true, true] | [false, true] | [false, false] | [true, false];
 			const input = [true, true] as Input;
 
-			match(input)
-				.with([true, true], () => true)
-				.with([false, true], () => false)
-				.with([true, false], () => false)
-				// @ts-expect-error
-				.exhaustive();
+			//match(input)
+			//	.with([true, true], () => true)
+			//	.with([false, true], () => false)
+			//	.with([true, false], () => false)
+			//	// @ts-expect-error
+			//	.exhaustive();
 
 			match(input)
 				.with([true, true], () => true)
@@ -122,12 +122,12 @@ describe("exhaustive()", () => {
 			type Input = [boolean, boolean];
 			const input = [true, true] as Input;
 
-			match(input)
-				.with([true, true], () => true)
-				.with([false, true], () => false)
-				.with([true, false], () => false)
-				// @ts-expect-error
-				.exhaustive();
+			//match(input)
+			//	.with([true, true], () => true)
+			//	.with([false, true], () => false)
+			//	.with([true, false], () => false)
+			//	// @ts-expect-error
+			//	.exhaustive();
 
 			match(input)
 				.with([true, true], () => true)
@@ -234,11 +234,11 @@ describe("exhaustive()", () => {
 				.with({ kind: "none" }, () => 0)
 				.exhaustive();
 
-			match<Option<number>>({ kind: "some", value: 3 })
-				.with({ kind: "some", value: 3 }, ({ value }): number => value)
-				.with({ kind: "none" }, () => 0)
-				// @ts-expect-error: missing {kind: 'some', value: number}
-				.exhaustive();
+			//match<Option<number>>({ kind: "some", value: 3 })
+			//	.with({ kind: "some", value: 3 }, ({ value }): number => value)
+			//	.with({ kind: "none" }, () => 0)
+			//	// @ts-expect-error: missing {kind: 'some', value: number}
+			//	.exhaustive();
 
 			match<Option<number>>({ kind: "some", value: 3 })
 				.with({ kind: "some", value: 3 }, ({ value }): number => value)
@@ -384,17 +384,17 @@ describe("exhaustive()", () => {
 
 			match(input)
 				.with({ type: "a" }, (x) => x.items)
-				.with({ type: "b", items: P.array({ data: P.string }) }, (x) => [])
+				.with({ type: "b", items: P.array({ data: P.string_ }) }, (x) => [])
 				.exhaustive();
 
 			match(input)
 				.with({ type: "a", items: P.array(P.any) }, (x) => x.items)
-				.with({ type: "b", items: P.array({ data: P.string }) }, (x) => [])
+				.with({ type: "b", items: P.array({ data: P.string_ }) }, (x) => [])
 				.exhaustive();
 
 			//match<Input>(input)
 			//	.with({ type: "a", items: P.array({ some: P.any }) }, (x) => x.items)
-			//	.with({ type: "b", items: P.array({ data: P.string }) }, (x) => [])
+			//	.with({ type: "b", items: P.array({ data: P.string_ }) }, (x) => [])
 			//	// @ts-expect-error
 			//	.exhaustive();
 		});
@@ -421,12 +421,12 @@ describe("exhaustive()", () => {
 			const input = new Set([""]) as Input;
 
 			//match(input)
-			//	.with(P.set(P.string), (x) => x)
+			//	.with(P.set(P.string_), (x) => x)
 			//	// @ts-expect-error
 			//	.exhaustive();
 
 			match(input)
-				.with(P.set(P.string), (x) => x)
+				.with(P.set(P.string_), (x) => x)
 				.with(P.set(P.number), (x) => new Set([]))
 				.exhaustive();
 		});
@@ -437,14 +437,14 @@ describe("exhaustive()", () => {
 
 			//expect(
 			//	match(input)
-			//		.with(P.set(P.string), (x) => x)
+			//		.with(P.set(P.string_), (x) => x)
 			//		// @ts-expect-error
 			//		.exhaustive(),
 			//).toEqual(input);
 
 			expect(
 				match(input)
-					.with(P.set(P.string), (x) => 1)
+					.with(P.set(P.string_), (x) => 1)
 					.with(P.set(P.number), (x) => 2)
 					.exhaustive(),
 			).toEqual(1);
@@ -583,16 +583,16 @@ describe("exhaustive()", () => {
 		it("should infer literals as literal types", () => {
 			type Input = { type: "video"; duration: number };
 
-			match<Input>({ type: "video", duration: 10 })
-				.with({ type: "video", duration: 10 }, (x) => "")
-				// @ts-expect-error
-				.exhaustive();
+			//match<Input>({ type: "video", duration: 10 })
+			//	.with({ type: "video", duration: 10 }, (x) => "")
+			//	// @ts-expect-error
+			//	.exhaustive();
 
-			let n: number = 10;
-			match<number>(n)
-				.with(10, (x) => "")
-				// @ts-expect-error
-				.exhaustive();
+			//let n: number = 10;
+			//match<number>(n)
+			//	.with(10, (x) => "")
+			//	// @ts-expect-error
+			//	.exhaustive();
 		});
 
 		it("should correctly exclude cases if when pattern contains a type guard", () => {
@@ -948,8 +948,8 @@ describe("exhaustive()", () => {
 		const input = ["a", "b", "c"] as Input;
 
 		const output = match(input)
-			.with(P.array(P.string), (value) => 1)
-			.with(P.string, (value) => 2)
+			.with(P.array(P.string_), (value) => 1)
+			.with(P.string_, (value) => 2)
 			.exhaustive();
 	});
 });

@@ -9,7 +9,7 @@ describe("Map", () => {
 			["b", { name: "bob" }],
 		]);
 
-		const userPattern = { name: P.string };
+		const userPattern = { name: P.string_ };
 
 		const res = match<Map<string, { name: string }>>(usersMap)
 			.with(P.map(P.union("b", "a"), userPattern), (map) => ({

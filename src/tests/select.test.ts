@@ -344,7 +344,7 @@ describe("select", () => {
 					.with(
 						{
 							type: "c",
-							value: { value: P.select(P.union(P.boolean, P.array(P.string))) },
+							value: { value: P.select(P.union(P.boolean, P.array(P.string_))) },
 						},
 						(x) => {
 							type t = Expect<Equal<typeof x, boolean | string[]>>;
@@ -391,7 +391,7 @@ describe("select", () => {
 	it("should work with variadic tuples", () => {
 		const fn = (input: string[]) =>
 			match(input)
-				.with([P.string, "some", "cli", "cmd", P.select(), ...P.array()], (arg) => {
+				.with([P.string_, "some", "cli", "cmd", P.select(), ...P.array()], (arg) => {
 					type t = Expect<Equal<typeof arg, string>>;
 					return arg;
 				})

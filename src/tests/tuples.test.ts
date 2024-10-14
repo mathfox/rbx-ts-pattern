@@ -84,7 +84,7 @@ describe("tuple ([a, b])", () => {
 							type t = Expect<Equal<typeof x, [string, 20]>>;
 							return `number match`;
 						})
-						.with([P.string, P.number], (x) => {
+						.with([P.string_, P.number], (x) => {
 							type t = Expect<Equal<typeof x, [string, number]>>;
 							return `not matching`;
 						})

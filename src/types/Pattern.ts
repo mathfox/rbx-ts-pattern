@@ -113,13 +113,13 @@ export type UnknownPattern =
 /**
  * `Pattern<a>` is the generic type for patterns matching a value of type `a`. A pattern can be any (nested) javascript value.
  *
- * They can also be wildcards, like `P._`, `P.string`, `P.number`,
+ * They can also be wildcards, like `P._`, `P.string_`, `P.number`,
  * or other matchers, like `P.when(predicate)`, `P.not(pattern)`, etc.
  *
  * [Read the documentation for `P.Pattern` on GitHub](https://github.com/gvergnaud/ts-pattern#patterns)
  *
  * @example
- * const pattern: P.Pattern<User> = { name: P.string }
+ * const pattern: P.Pattern<User> = { name: P.string_ }
  */
 export type Pattern<a> = unknown extends a ? UnknownPattern : KnownPattern<a>;
 
@@ -176,7 +176,7 @@ export type Chainable<p, omitted extends string = never> = p &
 			 *
 			 * @example
 			 *  match(value)
-			 *   .with({ greeting: P.string.optional() }, () => 'will match { greeting?: string}')
+			 *   .with({ greeting: P.string_.optional() }, () => 'will match { greeting?: string}')
 			 */
 			optional<input>(): Chainable<OptionalP<input, p>, omitted | "optional">;
 			/**
@@ -188,7 +188,7 @@ export type Chainable<p, omitted extends string = never> = p &
 			 * @example
 			 *  match(value)
 			 *   .with(
-			 *     P.string.and(P.when(isUsername)),
+			 *     P.string_.and(P.when(isUsername)),
 			 *     (username) => '...'
 			 *   )
 			 */
@@ -202,7 +202,7 @@ export type Chainable<p, omitted extends string = never> = p &
 			 * @example
 			 *  match(value)
 			 *   .with(
-			 *     { value: P.string.or(P.number) },
+			 *     { value: P.string_.or(P.number) },
 			 *     ({ value }) => 'value: number | string'
 			 *   )
 			 */
@@ -214,11 +214,11 @@ export type Chainable<p, omitted extends string = never> = p &
 			 *
 			 * @example
 			 *  match<{ age: number }>(value)
-			 *   .with({ age: P.string.select() }, (age) => 'age: number')
+			 *   .with({ age: P.string_.select() }, (age) => 'age: number')
 			 */
 			select<input>(): Chainable<SelectP<symbols.anonymousSelectKey, input, p>, omitted | "select" | "or" | "and">;
 			select<input, k extends string>(key: k): Chainable<SelectP<k, input, p>, omitted | "select" | "or" | "and">;
-		},
+		} & { [TKey in string]: string },
 		omitted
 	>;
 
@@ -229,49 +229,49 @@ export type StringChainable<p extends Matcher<any, any, any, any, any>, omitted 
 	Omit<
 		{
 			/**
-			 * `P.string.startsWith(start)` is a pattern, matching **strings** starting with `start`.
+			 * `P.string_.startsWith(start)` is a pattern, matching **strings** starting with `start`.
 			 *
-			 * [Read the documentation for `P.string.startsWith` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringstartsWith)
+			 * [Read the documentation for `P.string_.startsWith` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringstartsWith)
 			 *
 			 * @example
 			 *  match(value)
-			 *   .with(P.string.startsWith('A'), () => 'value starts with an A')
+			 *   .with(P.string_.startsWith('A'), () => 'value starts with an A')
 			 */
 			startsWith<input, const start extends string>(
 				start: start,
 			): StringChainable<MergeGuards<input, p, GuardP<unknown, `${start}${string}`>>, omitted | "startsWith">;
 			/**
-			 * `P.string.endsWith(end)` is a pattern, matching **strings** ending with `end`.
+			 * `P.string_.endsWith(end)` is a pattern, matching **strings** ending with `end`.
 			 *
-			 * [Read the documentation for `P.string.endsWith` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringendsWith)
+			 * [Read the documentation for `P.string_.endsWith` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringendsWith)
 			 *
 			 * @example
 			 *  match(value)
-			 *   .with(P.string.endsWith('!'), () => 'value ends with an !')
+			 *   .with(P.string_.endsWith('!'), () => 'value ends with an !')
 			 */
 			endsWith<input, const end extends string>(
 				end: end,
 			): StringChainable<MergeGuards<input, p, GuardP<unknown, `${string}${end}`>>, omitted | "endsWith">;
 			/**
-			 * `P.string.minLength(min)` is a pattern, matching **strings** with at least `min` characters.
+			 * `P.string_.minLength(min)` is a pattern, matching **strings** with at least `min` characters.
 			 *
-			 * [Read the documentation for `P.string.minLength` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringminLength)
+			 * [Read the documentation for `P.string_.minLength` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringminLength)
 			 *
 			 * @example
 			 *  match(value)
-			 *   .with(P.string.minLength(10), () => 'string with more length <= 10')
+			 *   .with(P.string_.minLength(10), () => 'string with more length <= 10')
 			 */
 			minLength<input, const min extends number>(
 				min: min,
 			): StringChainable<MergeGuards<input, p, GuardExcludeP<unknown, string, never>>, omitted | "minLength">;
 			/**
-			 * `P.string.length(len)` is a pattern, matching **strings** with exactly `len` characters.
+			 * `P.string_.length(len)` is a pattern, matching **strings** with exactly `len` characters.
 			 *
-			 * [Read the documentation for `P.string.length` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringlength)
+			 * [Read the documentation for `P.string_.length` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringlength)
 			 *
 			 * @example
 			 *  match(value)
-			 *   .with(P.string.length(10), () => 'strings with length === 10')
+			 *   .with(P.string_.length(10), () => 'strings with length === 10')
 			 */
 			length<input, const len extends number>(
 				len: len,
@@ -280,42 +280,42 @@ export type StringChainable<p extends Matcher<any, any, any, any, any>, omitted 
 				omitted | "length" | "minLength" | "maxLength"
 			>;
 			/**
-			 * `P.string.maxLength(max)` is a pattern, matching **strings** with at most `max` characters.
+			 * `P.string_.maxLength(max)` is a pattern, matching **strings** with at most `max` characters.
 			 *
-			 * [Read the documentation for `P.string.maxLength` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringmaxLength)
+			 * [Read the documentation for `P.string_.maxLength` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringmaxLength)
 			 *
 			 * @example
 			 *  match(value)
-			 *   .with(P.string.maxLength(10), () => 'string with more length >= 10')
+			 *   .with(P.string_.maxLength(10), () => 'string with more length >= 10')
 			 */
 			maxLength<input, const max extends number>(
 				max: max,
 			): StringChainable<MergeGuards<input, p, GuardExcludeP<unknown, string, never>>, omitted | "maxLength">;
 			/**
-			 * `P.string.includes(substr)` is a pattern, matching **strings** containing `substr`.
+			 * `P.string_.includes(substr)` is a pattern, matching **strings** containing `substr`.
 			 *
-			 * [Read the documentation for `P.string.includes` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringincludes)
+			 * [Read the documentation for `P.string_.includes` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringincludes)
 			 *
 			 * @example
 			 *  match(value)
-			 *   .with(P.string.includes('http'), () => 'value contains http')
+			 *   .with(P.string_.includes('http'), () => 'value contains http')
 			 */
 			includes<input, const substr extends string>(
 				substr: substr,
 			): StringChainable<MergeGuards<input, p, GuardExcludeP<unknown, string, never>>, omitted>;
 			/**
-			 * `P.string.regex(expr)` is a pattern, matching **strings** that `expr` regular expression.
+			 * `P.string_.regex(expr)` is a pattern, matching **strings** that `expr` regular expression.
 			 *
-			 * [Read the documentation for `P.string.regex` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringregex)
+			 * [Read the documentation for `P.string_.regex` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringregex)
 			 *
 			 * @example
 			 *  match(value)
-			 *   .with(P.string.regex(/^https?:\/\//), () => 'url')
+			 *   .with(P.string_.regex(/^https?:\/\//), () => 'url')
 			 */
 			regex<input, const expr extends string | RegExp>(
 				expr: expr,
 			): StringChainable<MergeGuards<input, p, GuardExcludeP<unknown, string, never>>, omitted>;
-		},
+		} & { [TKey in string]: string },
 		omitted
 	>;
 
@@ -433,7 +433,7 @@ export type NumberChainable<p, omitted extends string = never> = Chainable<p, om
 				MergeGuards<input, p, GuardExcludeP<unknown, number, never>>,
 				omitted | "positive" | "negative" | "negative"
 			>;
-		},
+		} & { [TKey in string]: string },
 		omitted
 	>;
 
@@ -450,7 +450,7 @@ export type ArrayChainable<pattern, omitted extends string = never> = Variadic<p
 			 *
 			 * @example
 			 *  match(value)
-			 *   .with({ greeting: P.string.optional() }, () => 'will match { greeting?: string}')
+			 *   .with({ greeting: P.string_.optional() }, () => 'will match { greeting?: string}')
 			 */
 			optional<input>(): ArrayChainable<OptionalP<input, pattern>, omitted | "optional">;
 			/**
@@ -460,10 +460,10 @@ export type ArrayChainable<pattern, omitted extends string = never> = Variadic<p
 			 *
 			 * @example
 			 *  match<{ age: number }>(value)
-			 *   .with({ age: P.string.select() }, (age) => 'age: number')
+			 *   .with({ age: P.string_.select() }, (age) => 'age: number')
 			 */
 			select<input>(): ArrayChainable<SelectP<symbols.anonymousSelectKey, input, pattern>, omitted | "select">;
 			select<input, k extends string>(key: k): ArrayChainable<SelectP<k, input, pattern>, omitted | "select">;
-		},
+		} & { [TKey in string]: string },
 		omitted
 	>;

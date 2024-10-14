@@ -58,7 +58,7 @@ describe("Unions (a | b)", () => {
 				type t = Expect<Equal<typeof x, Post>>;
 				return 1;
 			})
-			.with({ type: "video", content: { src: P.string } }, (x) => {
+			.with({ type: "video", content: { src: P.string_ } }, (x) => {
 				type t = Expect<Equal<typeof x, Video>>;
 				return 2;
 			})
@@ -148,7 +148,7 @@ describe("Unions (a | b)", () => {
 	//		const networkError = new Error() as Input;
 	//
 	//		const message = match(networkError)
-	//			.with({ statusCode: 401, name: P.string, message: P.string }, (x) => "Not Authenticated")
+	//			.with({ statusCode: 401, name: P.string_, message: P.string_ }, (x) => "Not Authenticated")
 	//			.with({ statusCode: 403, name: "", message: "" }, (x) => "Permission Denied")
 	//			.otherwise(() => "Network Error");
 	//

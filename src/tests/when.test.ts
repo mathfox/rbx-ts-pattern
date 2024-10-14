@@ -162,7 +162,7 @@ describe("when", () => {
 						},
 					)
 					.with(
-						P.string,
+						P.string_,
 						(x) => x.size() > 2 && x.size() < 10,
 						() => "2 < x.length < 10",
 					)
@@ -179,7 +179,7 @@ describe("when", () => {
 							return "x: number";
 						},
 					)
-					.with(P.string, () => "x: string")
+					.with(P.string_, () => "x: string")
 					.exhaustive();
 
 				expect(res).toEqual(expected);
@@ -210,7 +210,7 @@ describe("when", () => {
 							list: P.array({
 								test: "a",
 								sublist: ["w"],
-								maybe: P.string.optional(),
+								maybe: P.string_.optional(),
 								prop: P.when((x) => {
 									type t = Expect<Equal<typeof x, string>>;
 									return true;

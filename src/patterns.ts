@@ -90,7 +90,7 @@ export type unstable_Matcher<narrowedOrFn, input = unknown, pattern = never> = R
  * [Read the documentation for `P.infer` on GitHub](https://github.com/gvergnaud/ts-pattern#pinfer)
  *
  * @example
- * const userPattern = { name: P.string }
+ * const userPattern = { name: P.string_ }
  * type User = P.infer<typeof userPattern>
  */
 export type infer<pattern extends Pattern<any>> = InvertPattern<pattern, unknown>;
@@ -224,7 +224,7 @@ type WithDefault<a, b> = [a] extends [never] ? b : a;
  *
  * @example
  *  match(value)
- *   .with({ users: P.array({ name: P.string }) }, () => 'will match { name: string }[]')
+ *   .with({ users: P.array({ name: P.string_ }) }, () => 'will match { name: string }[]')
  */
 export function array<input>(): ArrayChainable<ArrayP<input, unknown>>;
 export function array<input, const pattern extends Pattern<WithDefault<UnwrapArray<input>, unknown>>>(
@@ -271,7 +271,7 @@ export function array(...args: [pattern?: any]): ArrayChainable<ArrayP<any, any>
  *
  * @example
  *  match(value)
- *   .with({ users: P.set(P.string) }, () => 'will match Set<string>')
+ *   .with({ users: P.set(P.string_) }, () => 'will match Set<string>')
  */
 export function set<input>(): Chainable<SetP<input, unknown>>;
 export function set<input, const pattern extends Pattern<WithDefault<UnwrapSet<input>, unknown>>>(
@@ -328,7 +328,7 @@ const setEvery = <T>(set: Set<T>, predicate: (value: T) => boolean) => {
  *
  * @example
  *  match(value)
- *   .with({ users: P.map(P.map(P.string, P.number)) }, (map) => `map's type is Map<string, number>`)
+ *   .with({ users: P.map(P.map(P.string_, P.number)) }, (map) => `map's type is Map<string, number>`)
  */
 export function map<input>(): Chainable<MapP<input, unknown, unknown>>;
 export function map<
@@ -396,8 +396,8 @@ const mapEvery = <K, T>(map: Map<K, T>, predicate: (value: T, key: K) => boolean
  *   .with(
  *     {
  *       user: P.intersection(
- *         { firstname: P.string },
- *         { lastname: P.string },
+ *         { firstname: P.string_ },
+ *         { lastname: P.string_ },
  *         { age: P.when(age => age > 21) }
  *       )
  *     },
@@ -466,7 +466,7 @@ export function union<input, const patterns extends readonly [Pattern<input>, ..
  *
  * @example
  *  match<{ a: string | number }>(value)
- *   .with({ a: P.not(P.string) }, (x) => 'will match { a: number }'
+ *   .with({ a: P.not(P.string_) }, (x) => 'will match { a: number }'
  *   )
  */
 
@@ -619,83 +619,83 @@ export const any: AnyPattern = chainable(when(isUnknown));
 export const _ = any;
 
 /**
- * `P.string.startsWith(start)` is a pattern, matching **strings** starting with `start`.
+ * `P.string_.startsWith(start)` is a pattern, matching **strings** starting with `start`.
  *
- * [Read the documentation for `P.string.startsWith` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringstartsWith)
+ * [Read the documentation for `P.string_.startsWith` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringstartsWith)
  *
  * @example
  *  match(value)
- *   .with(P.string.startsWith('A'), () => 'value starts with an A')
+ *   .with(P.string_.startsWith('A'), () => 'value starts with an A')
  */
 
 const startsWith = <input, const start extends string>(start: start): GuardP<input, `${start}${string}`> =>
 	when((value) => isString(value) && String.startsWith(value, start));
 
 /**
- * `P.string.endsWith(end)` is a pattern, matching **strings** ending with `end`.
+ * `P.string_.endsWith(end)` is a pattern, matching **strings** ending with `end`.
  *
- * [Read the documentation for `P.string.endsWith` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringendsWith)
+ * [Read the documentation for `P.string_.endsWith` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringendsWith)
  *
  * @example
  *  match(value)
- *   .with(P.string.endsWith('!'), () => 'value ends with an !')
+ *   .with(P.string_.endsWith('!'), () => 'value ends with an !')
  */
-const endsWith = <input, const end extends string>(end: end): GuardP<input, `${string}${end}`> =>
-	when((value) => isString(value) && String.endsWith(value, end));
+const endsWith = <input, const end extends string>(end_: end): GuardP<input, `${string}${end}`> =>
+	when((value) => isString(value) && String.endsWith(value, end_));
 
 /**
- * `P.string.minLength(min)` is a pattern, matching **strings** with at least `min` characters.
+ * `P.string_.minLength(min)` is a pattern, matching **strings** with at least `min` characters.
  *
- * [Read the documentation for `P.string.minLength` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringminLength)
+ * [Read the documentation for `P.string_.minLength` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringminLength)
  *
  * @example
  *  match(value)
- *   .with(P.string.minLength(10), () => 'string with more length >= 10')
+ *   .with(P.string_.minLength(10), () => 'string with more length >= 10')
  */
 const minLength = <const min extends number>(min: min) => when((value) => isString(value) && value.size() >= min);
 
 /**
- * `P.string.length(len)` is a pattern, matching **strings** with exactly `len` characters.
+ * `P.string_.length(len)` is a pattern, matching **strings** with exactly `len` characters.
  *
- * [Read the documentation for `P.string.length` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringlength)
+ * [Read the documentation for `P.string_.length` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringlength)
  *
  * @example
  *  match(value)
- *   .with(P.string.length(10), () => 'strings with length === 10')
+ *   .with(P.string_.length(10), () => 'strings with length === 10')
  */
 const length = <const len extends number>(len: len) => when((value) => isString(value) && value.size() === len);
 
 /**
- * `P.string.maxLength(max)` is a pattern, matching **strings** with at most `max` characters.
+ * `P.string_.maxLength(max)` is a pattern, matching **strings** with at most `max` characters.
  *
- * [Read the documentation for `P.string.maxLength` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringmaxLength)
+ * [Read the documentation for `P.string_.maxLength` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringmaxLength)
  *
  * @example
  *  match(value)
- *   .with(P.string.maxLength(10), () => 'string with more length <= 10')
+ *   .with(P.string_.maxLength(10), () => 'string with more length <= 10')
  */
 const maxLength = <const max extends number>(max: max) => when((value) => isString(value) && value.size() <= max);
 
 /**
- * `P.string.includes(substr)` is a pattern, matching **strings** containing `substr`.
+ * `P.string_.includes(substr)` is a pattern, matching **strings** containing `substr`.
  *
- * [Read the documentation for `P.string.includes` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringincludes)
+ * [Read the documentation for `P.string_.includes` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringincludes)
  *
  * @example
  *  match(value)
- *   .with(P.string.includes('http'), () => 'value contains http')
+ *   .with(P.string_.includes('http'), () => 'value contains http')
  */
 const includes = <input, const substr extends string>(substr: substr): GuardExcludeP<input, string, never> =>
 	when((value) => isString(value) && /*value.includes(substr)*/ value.match(substr)[0] !== undefined);
 
 /**
- * `P.string.regex(expr)` is a pattern, matching **strings** that `expr` regular expression.
+ * `P.string_.regex(expr)` is a pattern, matching **strings** that `expr` regular expression.
  *
- * [Read the documentation for `P.string.regex` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringregex)
+ * [Read the documentation for `P.string_.regex` on GitHub](https://github.com/gvergnaud/ts-pattern#pstringregex)
  *
  * @example
  *  match(value)
- *   .with(P.string.regex(/^https?:\/\//), () => 'url')
+ *   .with(P.string_.regex(/^https?:\/\//), () => 'url')
  */
 const regex = <input, const expr extends string>(expr: expr): GuardExcludeP<input, string, never> =>
 	when((value) => isString(value) && value.match(expr)[0] !== undefined);
@@ -714,15 +714,15 @@ const stringChainable = <pattern extends Matcher<any, any, any, any, any>>(
 	}) as any;
 
 /**
- * `P.string` is a wildcard pattern, matching any **string**.
+ * `P.string_` is a wildcard pattern, matching any **string**.
  *
- * [Read the documentation for `P.string` on GitHub](https://github.com/gvergnaud/ts-pattern#pstring-wildcard)
+ * [Read the documentation for `P.string_` on GitHub](https://github.com/gvergnaud/ts-pattern#pstring-wildcard)
  *
  * @example
  *  match(value)
- *   .with(P.string, () => 'will match on strings')
+ *   .with(P.string_, () => 'will match on strings')
  */
-export const string: StringPattern = stringChainable(when(isString));
+export const string_: StringPattern = stringChainable(when(isString));
 
 /**
  * `P.number.between(min, max)` matches **numbers** between `min` and `max`,
