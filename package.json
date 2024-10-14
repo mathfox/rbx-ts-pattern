@@ -1,0 +1,36 @@
+{
+	"name": "@rbxts/rbx-ts-pattern",
+	"version": "0.0.1",
+	"description": "ts-pattern adaption for roblox-ts",
+	"main": "out/init.luau",
+	"types": "out/index.d.ts",
+	"files": ["out", "!out/jest.config.*", "!out/**/*.test.*"],
+	"scripts": {
+		"build": "rbxtsc --type package",
+		"prepublishOnly": "bun run build"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mathfox/rbx-ts-pattern.git"
+	},
+	"keywords": ["roblox", "roblox-ts", "ts-pattern", "pattern"],
+	"author": {
+		"name": "Ivan Leontev",
+		"url": "https://github.com/mathfox"
+	},
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/mathfox/rbx-ts-pattern/issues"
+	},
+	"homepage": "https://github.com/mathfox/rbx-ts-pattern#readme",
+	"publishConfig": {
+		"access": "public"
+	},
+	"devDependencies": {
+		"@rbxts/compiler-types": "^3.0.0-types.0",
+		"@rbxts/types": "^1.0.805",
+		"@rbxts/jest": "^0.1.0",
+		"@rbxts/jest-globals": "^0.1.0",
+		"roblox-ts": "^3.0.0-dev-834585a"
+	}
+}
