@@ -13,18 +13,18 @@
  * @internal
  */
 
-export const matcher = {};
+export const matcher: unique symbol = {} as any;
 export type matcher = typeof matcher;
 
-export const unset = {};
+export const unset: unique symbol = {} as any;
 export type unset = typeof unset;
 
-export const isVariadic = {};
+export const isVariadic: unique symbol = {} as any;
 export type isVariadic = typeof isVariadic;
 
 // can't be a symbol because this key has to be enumerable.
 export const anonymousSelectKey = "@ts-pattern/anonymous-select-key";
 export type anonymousSelectKey = typeof anonymousSelectKey;
 
-export const override = {};
+export const override: unique symbol = {} as any;
 export type override = typeof override;

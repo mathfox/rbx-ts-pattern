@@ -32,5 +32,8 @@
 		"@rbxts/jest": "^0.1.0",
 		"@rbxts/jest-globals": "^0.1.0",
 		"roblox-ts": "^3.0.0-dev-834585a"
+	},
+	"dependencies": {
+		"@rbxts/phantom": "0.6.3"
 	}
 }

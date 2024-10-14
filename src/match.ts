@@ -1,16 +1,14 @@
-import { Pattern } from './types/Pattern';
-import { Match } from './types/Match';
-import * as symbols from './internals/symbols';
-import { matchPattern } from './internals/helpers';
-import { NonExhaustiveError } from './errors';
+import { Pattern } from "./types/Pattern";
+import { Match } from "./types/Match";
+import * as symbols from "./internals/symbols";
+import { matchPattern } from "./internals/helpers";
+import { slice } from "@rbxts/phantom/src/Array";
 
-type MatchState<output> =
-  | { matched: true; value: output }
-  | { matched: false; value: undefined };
+type MatchState<output> = { matched: true; value: output } | { matched: false; value: undefined };
 
 const unmatched: MatchState<never> = {
-  matched: false,
-  value: undefined,
+	matched: false,
+	value: undefined,
 };
 
 /**
@@ -29,10 +27,8 @@ const unmatched: MatchState<never> = {
  *    .exhaustive();
  *
  */
-export function match<const input, output = symbols.unset>(
-  value: input
-): Match<input, output> {
-  return new MatchExpression(value, unmatched) as any;
+export function match<const input, output = symbols.unset>(value: input): Match<input, output> {
+	return new MatchExpression(value, unmatched) as any;
 }
 
 /**
@@ -45,84 +41,89 @@ export function match<const input, output = symbols.unset>(
  * can be found in src/types/Match.ts.
  */
 class MatchExpression<input, output> {
-  constructor(private input: input, private state: MatchState<output>) {}
+	constructor(
+		private input: input,
+		private state: MatchState<output>,
+	) {}
 
-  with(...args: any[]): MatchExpression<input, output> {
-    if (this.state.matched) return this;
+	with(...args: any[]): MatchExpression<input, output> {
+		if (this.state.matched) return this;
 
-    const handler: (selection: unknown, value: input) => output =
-      args[args.length - 1];
+		const handler: (selection: unknown, value: input) => output = args[args.size() - 1];
 
-    const patterns: Pattern<input>[] = [args[0]];
-    let predicate: ((value: input) => unknown) | undefined = undefined;
+		const patterns: Pattern<input>[] = [args[0]];
+		let predicate: ((value: input) => unknown) | undefined = undefined;
 
-    if (args.length === 3 && typeof args[1] === 'function') {
-      // case with guard as second argument
-      predicate = args[1];
-    } else if (args.length > 2) {
-      // case with several patterns
-      patterns.push(...args.slice(1, args.length - 1));
-    }
+		if (args.size() === 3 && typeIs(args[1], "function")) {
+			// case with guard as second argument
+			predicate = args[1];
+		} else if (args.size() > 2) {
+			// case with several patterns
 
-    let hasSelections = false;
-    let selected: Record<string, unknown> = {};
-    const select = (key: string, value: unknown) => {
-      hasSelections = true;
-      selected[key] = value;
-    };
+			(patterns as defined[]).push(...slice(args, 1, args.size() - 1));
+		}
 
-    const matched =
-      patterns.some((pattern) => matchPattern(pattern, this.input, select)) &&
-      (predicate ? Boolean(predicate(this.input)) : true);
+		let hasSelections = false;
+		let selected: Record<string, unknown> = {};
+		const select = (key: string, value: unknown) => {
+			hasSelections = true;
+			selected[key] = value;
+		};
 
-    const selections = hasSelections
-      ? symbols.anonymousSelectKey in selected
-        ? selected[symbols.anonymousSelectKey]
-        : selected
-      : this.input;
+		const matched =
+			(patterns as defined[]).some((pattern) => matchPattern(pattern, this.input, select)) &&
+			(predicate ? predicate(this.input) : true);
 
-    const state = matched
-      ? {
-          matched: true as const,
-          value: handler(selections, this.input),
-        }
-      : unmatched;
+		const selections = hasSelections
+			? symbols.anonymousSelectKey in selected
+				? selected[symbols.anonymousSelectKey]
+				: selected
+			: this.input;
 
-    return new MatchExpression(this.input, state);
-  }
+		const state = matched
+			? {
+					matched: true as const,
+					value: handler(selections, this.input),
+				}
+			: unmatched;
 
-  when(
-    predicate: (value: input) => unknown,
-    handler: (selection: input, value: input) => output
-  ): MatchExpression<input, output> {
-    if (this.state.matched) return this;
+		return new MatchExpression(this.input, state);
+	}
 
-    const matched = Boolean(predicate(this.input));
+	when(
+		predicate: (value: input) => unknown,
+		handler: (selection: input, value: input) => output,
+	): MatchExpression<input, output> {
+		if (this.state.matched) return this;
 
-    return new MatchExpression<input, output>(
-      this.input,
-      matched
-        ? { matched: true, value: handler(this.input, this.input) }
-        : unmatched
-    );
-  }
+		const matched = predicate(this.input);
 
-  otherwise(handler: (value: input) => output): output {
-    if (this.state.matched) return this.state.value;
-    return handler(this.input);
-  }
+		return new MatchExpression<input, output>(
+			this.input,
+			matched ? { matched: true, value: handler(this.input, this.input) } : unmatched,
+		);
+	}
 
-  exhaustive(): output {
-    if (this.state.matched) return this.state.value;
+	otherwise(handler: (value: input) => output): output {
+		if (this.state.matched) return this.state.value;
+		return handler(this.input);
+	}
 
-    throw new NonExhaustiveError(this.input);
-  }
+	exhaustive(): output {
+		if (this.state.matched) return this.state.value;
 
-  run(): output {
-    return this.exhaustive();
-  }
+		/**
+		 * Error when the given input value does not match any included pattern
+		 * and .exhaustive() was specified
+		 */
+		error(`Pattern matching error: no pattern matches value ${this.input}`);
+	}
 
-  returnType() {
-    return this;
-  }
+	run(): output {
+		return this.exhaustive();
+	}
+
+	returnType() {
+		return this;
+	}
 }

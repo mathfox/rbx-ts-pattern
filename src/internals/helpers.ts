@@ -4,132 +4,112 @@
  * @internal
  */
 
-import * as symbols from './symbols';
-import { SelectionType } from '../types/FindSelected';
-import { Pattern, Matcher, MatcherType, AnyMatcher } from '../types/Pattern';
+import * as symbols from "./symbols";
+import { SelectionType } from "../types/FindSelected";
+import { Matcher, MatcherType, AnyMatcher } from "../types/Pattern";
+import isArray from "@rbxts/phantom/src/Array/isArray";
+import { keys, values } from "@rbxts/phantom/src/Shared";
+import slice from "@rbxts/phantom/src/Array/slice";
+import concat from "@rbxts/phantom/src/Array/concat";
 
 // @internal
-export const isObject = (value: unknown): value is Object =>
-  Boolean(value && typeof value === 'object');
+export const isObject = (value: unknown): value is object => typeIs(value, "table");
 
 //   @internal
-export const isMatcher = (
-  x: unknown
-): x is Matcher<unknown, unknown, MatcherType, SelectionType> => {
-  const pattern = x as Matcher<unknown, unknown, MatcherType, SelectionType>;
-  return pattern && !!pattern[symbols.matcher];
+export const isMatcher = (x: unknown): x is Matcher<unknown, unknown, MatcherType, SelectionType> => {
+	const pattern = x as Matcher<unknown, unknown, MatcherType, SelectionType>;
+	return pattern && !!pattern[symbols.matcher];
 };
 
 // @internal
-const isOptionalPattern = (
-  x: unknown
-): x is Matcher<unknown, unknown, 'optional', SelectionType> => {
-  return isMatcher(x) && x[symbols.matcher]().matcherType === 'optional';
+const isOptionalPattern = (x: unknown): x is Matcher<unknown, unknown, "optional", SelectionType> => {
+	return isMatcher(x) && x[symbols.matcher]().matcherType === "optional";
 };
 
 // tells us if the value matches a given pattern.
 // @internal
-export const matchPattern = (
-  pattern: any,
-  value: any,
-  select: (key: string, value: unknown) => void
-): boolean => {
-  if (isMatcher(pattern)) {
-    const matcher = pattern[symbols.matcher]();
-    const { matched, selections } = matcher.match(value);
-    if (matched && selections) {
-      Object.keys(selections).forEach((key) => select(key, selections[key]));
-    }
-    return matched;
-  }
+export const matchPattern = (pattern: any, value: any, select: (key: string, value: unknown) => void): boolean => {
+	if (isMatcher(pattern)) {
+		const matcher = pattern[symbols.matcher]();
+		const { matched, selections } = matcher.match(value);
+		if (matched && selections) {
+			keys(selections).forEach((key) => select(key, selections[key]));
+		}
+		return matched;
+	}
 
-  if (isObject(pattern)) {
-    if (!isObject(value)) return false;
+	if (isObject(pattern)) {
+		if (!isObject(value)) return false;
 
-    // Tuple pattern
-    if (Array.isArray(pattern)) {
-      if (!Array.isArray(value)) return false;
-      let startPatterns = [];
-      let endPatterns = [];
-      let variadicPatterns: AnyMatcher[] = [];
+		// Tuple pattern
+		if (isArray(pattern)) {
+			if (!isArray(value)) return false;
+			let startPatterns = [];
+			let endPatterns = [];
+			let variadicPatterns: AnyMatcher[] = [];
 
-      for (const i of pattern.keys()) {
-        const subpattern = pattern[i];
-        if (isMatcher(subpattern) && subpattern[symbols.isVariadic]) {
-          variadicPatterns.push(subpattern);
-        } else if (variadicPatterns.length) {
-          endPatterns.push(subpattern);
-        } else {
-          startPatterns.push(subpattern);
-        }
-      }
+			for (const i of keys(pattern)) {
+				const subpattern = pattern[i];
+				if (isMatcher(subpattern) && subpattern[symbols.isVariadic]) {
+					variadicPatterns.push(subpattern);
+				} else if (variadicPatterns.size()) {
+					endPatterns.push(subpattern);
+				} else {
+					startPatterns.push(subpattern);
+				}
+			}
 
-      if (variadicPatterns.length) {
-        if (variadicPatterns.length > 1) {
-          throw new Error(
-            `Pattern error: Using \`...P.array(...)\` several times in a single pattern is not allowed.`
-          );
-        }
+			if (variadicPatterns.size()) {
+				if (variadicPatterns.size() > 1) {
+					error(`Pattern error: Using \`...P.array(...)\` several times in a single pattern is not allowed.`);
+				}
 
-        if (value.length < startPatterns.length + endPatterns.length) {
-          return false;
-        }
+				if (value.size() < startPatterns.size() + endPatterns.size()) {
+					return false;
+				}
 
-        const startValues = value.slice(0, startPatterns.length);
-        const endValues =
-          endPatterns.length === 0 ? [] : value.slice(-endPatterns.length);
-        const middleValues = value.slice(
-          startPatterns.length,
-          endPatterns.length === 0 ? Infinity : -endPatterns.length
-        );
+				const startValues = slice(value, 0, startPatterns.size());
+				const endValues = endPatterns.size() === 0 ? [] : slice(value, -endPatterns.size());
+				const middleValues = slice(
+					value,
+					startPatterns.size(),
+					endPatterns.size() === 0 ? math.huge : -endPatterns.size(),
+				);
 
-        return (
-          startPatterns.every((subPattern, i) =>
-            matchPattern(subPattern, startValues[i], select)
-          ) &&
-          endPatterns.every((subPattern, i) =>
-            matchPattern(subPattern, endValues[i], select)
-          ) &&
-          (variadicPatterns.length === 0
-            ? true
-            : matchPattern(variadicPatterns[0], middleValues, select))
-        );
-      }
+				return (
+					(startPatterns as defined[]).every((subPattern, i) => matchPattern(subPattern, startValues[i], select)) &&
+					(endPatterns as defined[]).every((subPattern, i) => matchPattern(subPattern, endValues[i], select)) &&
+					(variadicPatterns.size() === 0 ? true : matchPattern(variadicPatterns[0], middleValues, select))
+				);
+			}
 
-      return pattern.length === value.length
-        ? pattern.every((subPattern, i) =>
-            matchPattern(subPattern, value[i], select)
-          )
-        : false;
-    }
+			return pattern.size() === value.size()
+				? (pattern as defined[]).every((subPattern, i) => matchPattern(subPattern, value[i], select))
+				: false;
+		}
 
-    return Reflect.ownKeys(pattern).every((k): boolean => {
-      const subPattern = pattern[k];
+		return keys(pattern).every((k): boolean => {
+			const subPattern = pattern[k];
 
-      return (
-        (k in value || isOptionalPattern(subPattern)) &&
-        matchPattern(subPattern, value[k], select)
-      );
-    });
-  }
+			return (k in value || isOptionalPattern(subPattern)) && matchPattern(subPattern, value[k], select);
+		});
+	}
 
-  return Object.is(value, pattern);
+	return value === pattern;
 };
 
 // @internal
 export const getSelectionKeys = (pattern: any): string[] => {
-  if (isObject(pattern)) {
-    if (isMatcher(pattern)) {
-      return pattern[symbols.matcher]().getSelectionKeys?.() ?? [];
-    }
-    if (Array.isArray(pattern)) return flatMap(pattern, getSelectionKeys);
-    return flatMap(Object.values(pattern), getSelectionKeys);
-  }
-  return [];
+	if (isObject(pattern)) {
+		if (isMatcher(pattern)) {
+			return pattern[symbols.matcher]().getSelectionKeys?.() ?? [];
+		}
+		if (isArray(pattern)) return flatMap(pattern, getSelectionKeys);
+		return flatMap(values(pattern), getSelectionKeys);
+	}
+	return [];
 };
 
 // @internal
-export const flatMap = <a, b>(
-  xs: readonly a[],
-  f: (v: a) => readonly b[]
-): b[] => xs.reduce<b[]>((acc, x) => acc.concat(f(x)), []);
+export const flatMap = <a, b>(xs: readonly a[], f: (v: a) => readonly b[]): b[] =>
+	(xs as readonly defined[]).reduce<b[]>((acc, x) => concat(acc, f(x as a)), []);
