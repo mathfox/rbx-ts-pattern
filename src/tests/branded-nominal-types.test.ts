@@ -22,7 +22,7 @@ describe("Branded strings", () => {
 	});
 
 	it("issue #167", () => {
-		const tag: unique symbol = Symbol();
+		const tag: unique symbol = {} as any;
 		type Tagged<Token> = { readonly [tag]: Token };
 		type Opaque<Type, Token = unknown> = Type & Tagged<Token>;
 

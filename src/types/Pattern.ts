@@ -153,7 +153,6 @@ export type AnyPattern = Chainable<GuardP<unknown, unknown>, never>;
 export type StringPattern = StringChainable<GuardP<unknown, string>, never>;
 export type NumberPattern = NumberChainable<GuardP<unknown, number>, never>;
 export type BooleanPattern = Chainable<GuardP<unknown, boolean>, never>;
-export type BigIntPattern = BigIntChainable<GuardP<unknown, bigint>, never>;
 export type SymbolPattern = Chainable<GuardP<unknown, symbol>, never>;
 export type NullishPattern = Chainable<GuardP<unknown, null | undefined>, never>;
 
@@ -432,101 +431,6 @@ export type NumberChainable<p, omitted extends string = never> = Chainable<p, om
 			 */
 			negative<input>(): NumberChainable<
 				MergeGuards<input, p, GuardExcludeP<unknown, number, never>>,
-				omitted | "positive" | "negative" | "negative"
-			>;
-		},
-		omitted
-	>;
-
-export type BigIntChainable<p, omitted extends string = never> = Chainable<p, omitted> &
-	Omit<
-		{
-			/**
-			 * `P.bigint.between(min, max)` matches **bigint** between `min` and `max`,
-			 * equal to min or equal to max.
-			 *
-			 * [Read the documentation for `P.bigint.between` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumberbetween)
-			 *
-			 * @example
-			 *  match(value)
-			 *   .with(P.bigint.between(0, 10), () => '0 <= numbers <= 10')
-			 */
-			between<input, const min extends bigint, const max extends bigint>(
-				min: min,
-				max: max,
-			): BigIntChainable<MergeGuards<input, p, GuardExcludeP<unknown, bigint, never>>, omitted>;
-			/**
-			 * `P.bigint.lt(max)` matches **bigint** smaller than `max`.
-			 *
-			 * [Read the documentation for `P.bigint.lt` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumberlt)
-			 *
-			 * @example
-			 *  match(value)
-			 *   .with(P.bigint.lt(10), () => 'numbers < 10')
-			 */
-			lt<input, const max extends bigint>(
-				max: max,
-			): BigIntChainable<MergeGuards<input, p, GuardExcludeP<unknown, bigint, never>>, omitted>;
-			/**
-			 * `P.bigint.gt(min)` matches **bigint** greater than `min`.
-			 *
-			 * [Read the documentation for `P.bigint.gt` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumbergt)
-			 *
-			 * @example
-			 *  match(value)
-			 *   .with(P.bigint.gt(10), () => 'numbers > 10')
-			 */
-			gt<input, const min extends bigint>(
-				min: min,
-			): BigIntChainable<MergeGuards<input, p, GuardExcludeP<unknown, bigint, never>>, omitted>;
-			/**
-			 * `P.bigint.lte(max)` matches **bigint** smaller than or equal to `max`.
-			 *
-			 * [Read the documentation for `P.bigint.lte` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumberlte)
-			 *
-			 * @example
-			 *  match(value)
-			 *   .with(P.bigint.lte(10), () => 'bigints <= 10')
-			 */
-			lte<input, const max extends bigint>(
-				max: max,
-			): BigIntChainable<MergeGuards<input, p, GuardExcludeP<unknown, bigint, never>>, omitted>;
-			/**
-			 * `P.bigint.gte(min)` matches **bigint** greater than or equal to `min`.
-			 *
-			 * [Read the documentation for `P.bigint.gte` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumbergte)
-			 *
-			 * @example
-			 *  match(value)
-			 *   .with(P.bigint.gte(10), () => 'bigints >= 10')
-			 */
-			gte<input, const min extends bigint>(
-				min: min,
-			): BigIntChainable<MergeGuards<input, p, GuardExcludeP<unknown, bigint, never>>, omitted>;
-			/**
-			 * `P.bigint.positive` matches **positive** bigints.
-			 *
-			 * [Read the documentation for `P.bigint.positive` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumberpositive)
-			 *
-			 * @example
-			 *  match(value)
-			 *   .with(P.bigint.positive, () => 'bigint > 0')
-			 */
-			positive<input>(): BigIntChainable<
-				MergeGuards<input, p, GuardExcludeP<unknown, bigint, never>>,
-				omitted | "positive" | "negative"
-			>;
-			/**
-			 * `P.bigint.negative` matches **negative** bigints.
-			 *
-			 * [Read the documentation for `P.bigint.negative` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumbernegative)
-			 *
-			 * @example
-			 *  match(value)
-			 *   .with(P.bigint.negative, () => 'bigint < 0')
-			 */
-			negative<input>(): BigIntChainable<
-				MergeGuards<input, p, GuardExcludeP<unknown, bigint, never>>,
 				omitted | "positive" | "negative" | "negative"
 			>;
 		},

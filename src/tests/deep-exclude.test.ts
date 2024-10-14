@@ -13,7 +13,6 @@ describe("DeepExclude", () => {
 			Expect<Equal<DeepExclude<string, string>, never>>,
 			Expect<Equal<DeepExclude<string | number, string>, number>>,
 			Expect<Equal<DeepExclude<string | number, boolean>, string | number>>,
-			Expect<Equal<DeepExclude<Primitives, null | undefined>, string | number | bigint | boolean | symbol>>,
 			Expect<Equal<DeepExclude<Primitives, never>, Primitives>>,
 		];
 	});
@@ -25,7 +24,6 @@ describe("DeepExclude", () => {
 			Expect<Equal<DeepExclude<1 | 2 | 3, 3>, 1 | 2>>,
 			Expect<Equal<DeepExclude<"hello" | 1, string>, 1>>,
 			Expect<Equal<DeepExclude<"hello" | 1, number>, "hello">>,
-			Expect<Equal<DeepExclude<200n | number, bigint>, number>>,
 			Expect<Equal<DeepExclude<undefined | number, number>, undefined>>,
 		];
 	});

@@ -4,7 +4,7 @@
 	"description": "ts-pattern adaption for roblox-ts",
 	"main": "out/init.luau",
 	"types": "out/index.d.ts",
-	"files": ["out", "!out/jest.config.*", "!out/**/*.test.*"],
+	"files": ["out", "!out/jest.config.*", "!out/**/*.test.*", "!out/tests"],
 	"scripts": {
 		"build": "rbxtsc --type package",
 		"prepublishOnly": "bun run build"

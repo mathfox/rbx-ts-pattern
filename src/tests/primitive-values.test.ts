@@ -35,10 +35,6 @@ describe("Primitive values", () => {
 					type t = Expect<Equal<typeof x, 1>>;
 					return "1";
 				})
-				.with(BigInt(2000), (x) => {
-					type t = Expect<Equal<typeof x, bigint>>;
-					return "BigInt(2000)";
-				})
 				.with(2, (x) => {
 					type t = Expect<Equal<typeof x, 2>>;
 					return "2";
@@ -70,10 +66,6 @@ describe("Primitive values", () => {
 					type t = Expect<Equal<typeof x, number>>;
 					return "number";
 				})
-				.with(P.bigint, (x) => {
-					type t = Expect<Equal<typeof x, bigint>>;
-					return "bigint";
-				})
 				.otherwise(() => "?");
 
 		expect(f(true)).toEqual("boolean");
@@ -81,6 +73,5 @@ describe("Primitive values", () => {
 		expect(f(Symbol("hello"))).toEqual("symbol");
 		expect(f("hello")).toEqual("string");
 		expect(f(20)).toEqual("number");
-		expect(f(BigInt(100))).toEqual("bigint");
 	});
 });

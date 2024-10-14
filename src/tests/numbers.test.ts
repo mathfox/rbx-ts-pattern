@@ -76,30 +76,29 @@ describe("Numbers", () => {
 		});
 
 		it(`P.number.lt(..)`, () => {
-			const f = (input: string | number | bigint) =>
+			const f = (input: string | number) =>
 				match(input)
 					.with(P.number.lt(10), (value) => {
 						type t = Expect<Equal<typeof value, number>>;
 						return "yes";
 					})
 					.otherwise((value) => {
-						type t = Expect<Equal<typeof value, string | number | bigint>>;
+						type t = Expect<Equal<typeof value, string | number>>;
 						return "no";
 					});
 
 			expect(f(5)).toBe("yes");
 			expect(f(12)).toBe("no");
-			expect(f(10n)).toBe("no");
 		});
 		it(`P.number.gt(..)`, () => {
-			const f = (input: string | number | bigint) =>
+			const f = (input: string | number) =>
 				match(input)
 					.with(P.number.gt(10), (value) => {
 						type t = Expect<Equal<typeof value, number>>;
 						return "yes";
 					})
 					.otherwise((value) => {
-						type t = Expect<Equal<typeof value, string | number | bigint>>;
+						type t = Expect<Equal<typeof value, string | number>>;
 						return "no";
 					});
 
@@ -108,14 +107,14 @@ describe("Numbers", () => {
 			expect(f(12)).toBe("yes");
 		});
 		it(`P.number.gte(..)`, () => {
-			const f = (input: string | number | bigint) =>
+			const f = (input: string | number) =>
 				match(input)
 					.with(P.number.gte(10), (value) => {
 						type t = Expect<Equal<typeof value, number>>;
 						return "yes";
 					})
 					.otherwise((value) => {
-						type t = Expect<Equal<typeof value, string | number | bigint>>;
+						type t = Expect<Equal<typeof value, string | number>>;
 						return "no";
 					});
 
@@ -124,14 +123,14 @@ describe("Numbers", () => {
 			expect(f(12)).toBe("yes");
 		});
 		it(`P.number.lte(..)`, () => {
-			const f = (input: string | number | bigint) =>
+			const f = (input: string | number) =>
 				match(input)
 					.with(P.number.lte(10), (value) => {
 						type t = Expect<Equal<typeof value, number>>;
 						return "yes";
 					})
 					.otherwise((value) => {
-						type t = Expect<Equal<typeof value, string | number | bigint>>;
+						type t = Expect<Equal<typeof value, string | number>>;
 						return "no";
 					});
 
@@ -140,14 +139,14 @@ describe("Numbers", () => {
 			expect(f(12)).toBe("no");
 		});
 		it(`P.number.int(..)`, () => {
-			const f = (input: string | number | bigint) =>
+			const f = (input: string | number) =>
 				match(input)
 					.with(P.number.int(), (value) => {
 						type t = Expect<Equal<typeof value, number>>;
 						return "yes";
 					})
 					.otherwise((value) => {
-						type t = Expect<Equal<typeof value, string | number | bigint>>;
+						type t = Expect<Equal<typeof value, string | number>>;
 						return "no";
 					});
 
@@ -156,14 +155,14 @@ describe("Numbers", () => {
 			expect(f(-Infinity)).toBe("no");
 		});
 		it(`P.number.finite()`, () => {
-			const f = (input: string | number | bigint) =>
+			const f = (input: string | number) =>
 				match(input)
 					.with(P.number.finite(), (value) => {
 						type t = Expect<Equal<typeof value, number>>;
 						return "yes";
 					})
 					.otherwise((value) => {
-						type t = Expect<Equal<typeof value, string | number | bigint>>;
+						type t = Expect<Equal<typeof value, string | number>>;
 						return "no";
 					});
 
@@ -172,14 +171,14 @@ describe("Numbers", () => {
 			expect(f(-Infinity)).toBe("no");
 		});
 		it(`P.number.positive()`, () => {
-			const f = (input: string | number | bigint) =>
+			const f = (input: string | number) =>
 				match(input)
 					.with(P.number.positive(), (value) => {
 						type t = Expect<Equal<typeof value, number>>;
 						return "yes";
 					})
 					.otherwise((value) => {
-						type t = Expect<Equal<typeof value, string | number | bigint>>;
+						type t = Expect<Equal<typeof value, string | number>>;
 						return "no";
 					});
 
@@ -189,14 +188,14 @@ describe("Numbers", () => {
 			expect(f(-Infinity)).toBe("no");
 		});
 		it(`P.number.negative()`, () => {
-			const f = (input: string | number | bigint) =>
+			const f = (input: string | number) =>
 				match(input)
 					.with(P.number.negative(), (value) => {
 						type t = Expect<Equal<typeof value, number>>;
 						return "yes";
 					})
 					.otherwise((value) => {
-						type t = Expect<Equal<typeof value, string | number | bigint>>;
+						type t = Expect<Equal<typeof value, string | number>>;
 						return "no";
 					});
 

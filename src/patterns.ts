@@ -26,11 +26,9 @@ import {
 	AnyPattern,
 	NumberPattern,
 	BooleanPattern,
-	BigIntPattern,
 	NullishPattern,
 	SymbolPattern,
 	Chainable,
-	BigIntChainable,
 	NumberChainable,
 	StringChainable,
 	ArrayChainable,
@@ -572,31 +570,23 @@ function isUnknown(x: unknown): x is unknown {
 }
 
 function isNumber<T>(x: T | number): x is number {
-	return typeof x === "number";
+	return typeIs(x, "number");
 }
 
 function isString<T>(x: T | string): x is string {
-	return typeof x === "string";
+	return typeIs(x, "string");
 }
 
 function isBoolean<T>(x: T | boolean): x is boolean {
-	return typeof x === "boolean";
+	return typeIs(x, "boolean");
 }
 
-function isBigInt<T>(x: T | bigint): x is bigint {
-	return typeof x === "bigint";
-}
-
-function isSymbol<T>(x: T | symbol): x is symbol {
-	return typeof x === "symbol";
-}
-
-function isNullish<T>(x: T | null | undefined): x is null | undefined {
-	return x === null || x === undefined;
+function isNullish<T>(x: T | undefined): x is undefined {
+	return x === undefined;
 }
 
 function isNonNullable(x: unknown): x is {} {
-	return x !== null && x !== undefined;
+	return x !== undefined;
 }
 
 type AnyConstructor = abstract new (...args: any[]) => any;
@@ -868,114 +858,6 @@ const numberChainable = <pattern extends Matcher<any, any, any, any, any>>(
 export const number: NumberPattern = numberChainable(when(isNumber));
 
 /**
- * `P.bigint.between(min, max)` matches **bigint** between `min` and `max`,
- * equal to min or equal to max.
- *
- * [Read the documentation for `P.bigint.between` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumberbetween)
- *
- * @example
- *  match(value)
- *   .with(P.bigint.between(0, 10), () => '0 <= bigints <= 10')
- */
-const betweenBigInt = <input, const min extends bigint, const max extends bigint>(
-	min: min,
-	max: max,
-): GuardExcludeP<input, bigint, never> => when((value) => isBigInt(value) && min <= value && max >= value);
-
-/**
- * `P.bigint.lt(max)` matches **bigint** smaller than `max`.
- *
- * [Read the documentation for `P.bigint.lt` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumberlt)
- *
- * @example
- *  match(value)
- *   .with(P.bigint.lt(10), () => 'bigints < 10')
- */
-const ltBigInt = <input, const max extends bigint>(max: max): GuardExcludeP<input, bigint, never> =>
-	when((value) => isBigInt(value) && value < max);
-
-/**
- * `P.bigint.gt(min)` matches **bigint** greater than `min`.
- *
- * [Read the documentation for `P.bigint.gt` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumbergt)
- *
- * @example
- *  match(value)
- *   .with(P.bigint.gt(10), () => 'bigints > 10')
- */
-const gtBigInt = <input, const min extends bigint>(min: min): GuardExcludeP<input, bigint, never> =>
-	when((value) => isBigInt(value) && value > min);
-
-/**
- * `P.bigint.lte(max)` matches **bigint** smaller than or equal to `max`.
- *
- * [Read the documentation for `P.bigint.lte` on GitHub](https://github.com/gvergnaud/ts-pattern#pnumberlte)
- *
- * @example
- *  match(value)
- *   .with(P.bigint.lte(10), () => 'bigints <= 10')
- */
-const lteBigInt = <input, const max extends bigint>(max: max): GuardExcludeP<input, bigint, never> =>
-	when((value) => isBigInt(value) && value <= max);
-
-/**
- * `P.bigint.gte(min)` matches **bigint** greater than or equal to `min`.
- *
- * [Read the documentation for `P.bigint.gte` on GitHub](https://github.com/gvergnaud/ts-pattern#pbigintgte)
- *
- * @example
- *  match(value)
- *   .with(P.bigint.gte(10), () => 'bigints >= 10')
- */
-const gteBigInt = <input, const min extends bigint>(min: min): GuardExcludeP<input, bigint, never> =>
-	when((value) => isBigInt(value) && value >= min);
-
-/**
- * `P.bigint.positive()` matches **positive** bigints.
- *
- * [Read the documentation for `P.bigint.positive()` on GitHub](https://github.com/gvergnaud/ts-pattern#pbigintpositive)
- *
- * @example
- *  match(value)
- *   .with(P.bigint.positive(), () => 'bigint > 0')
- */
-const positiveBigInt = <input>(): GuardExcludeP<input, bigint, never> => when((value) => isBigInt(value) && value > 0);
-
-/**
- * `P.bigint.negative()` matches **negative** bigints.
- *
- * [Read the documentation for `P.bigint.negative()` on GitHub](https://github.com/gvergnaud/ts-pattern#pbigintnegative)
- *
- * @example
- *  match(value)
- *   .with(P.bigint.negative(), () => 'bigint < 0')
- */
-const negativeBigInt = <input>(): GuardExcludeP<input, bigint, never> => when((value) => isBigInt(value) && value < 0);
-
-const bigintChainable = <pattern extends Matcher<any, any, any, any, any>>(
-	pattern: pattern,
-): BigIntChainable<pattern> =>
-	assign(chainable(pattern), {
-		between: (min: bigint, max: bigint) => bigintChainable(intersection(pattern, betweenBigInt(min, max))),
-		lt: (max: bigint) => bigintChainable(intersection(pattern, ltBigInt(max))),
-		gt: (min: bigint) => bigintChainable(intersection(pattern, gtBigInt(min))),
-		lte: (max: bigint) => bigintChainable(intersection(pattern, lteBigInt(max))),
-		gte: (min: bigint) => bigintChainable(intersection(pattern, gteBigInt(min))),
-		positive: () => bigintChainable(intersection(pattern, positiveBigInt())),
-		negative: () => bigintChainable(intersection(pattern, negativeBigInt())),
-	}) as any;
-
-/**
- * `P.bigint` is a wildcard pattern, matching any **bigint**.
- *
- * [Read the documentation for `P.bigint` on GitHub](https://github.com/gvergnaud/ts-pattern#number-wildcard)
- *
- * @example
- *   .with(P.bigint, () => 'will match on bigints')
- */
-export const bigint: BigIntPattern = bigintChainable(when(isBigInt));
-
-/**
  * `P.boolean` is a wildcard pattern, matching any **boolean**.
  *
  * [Read the documentation for `P.boolean` on GitHub](https://github.com/gvergnaud/ts-pattern#boolean-wildcard)
@@ -984,16 +866,6 @@ export const bigint: BigIntPattern = bigintChainable(when(isBigInt));
  *   .with(P.boolean, () => 'will match on booleans')
  */
 export const boolean: BooleanPattern = chainable(when(isBoolean));
-
-/**
- * `P.symbol` is a wildcard pattern, matching any **symbol**.
- *
- * [Read the documentation for `P.symbol` on GitHub](https://github.com/gvergnaud/ts-pattern#symbol-wildcard)
- *
- * @example
- *   .with(P.symbol, () => 'will match on symbols')
- */
-export const symbol: SymbolPattern = chainable(when(isSymbol));
 
 /**
  * `P.nullish` is a wildcard pattern, matching **null** or **undefined**.

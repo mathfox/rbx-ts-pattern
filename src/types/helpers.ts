@@ -128,15 +128,11 @@ export type IsLiteral<a> = [a] extends [null | undefined]
 					? symbol extends a
 						? false
 						: true
-					: [a] extends [bigint]
-						? bigint extends a
-							? false
-							: true
-						: false;
+					: false;
 
-export type Primitives = number | boolean | string | undefined | null | symbol | bigint;
+export type Primitives = number | boolean | string | undefined;
 
-export type NonLiteralPrimitive = Exclude<Primitives, undefined | null>;
+export type NonLiteralPrimitive = Exclude<Primitives, undefined>;
 
 export type TupleKeys = "0" | "1" | "2" | "3" | "4";
 

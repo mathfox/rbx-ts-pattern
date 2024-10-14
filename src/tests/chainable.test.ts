@@ -149,60 +149,6 @@ describe("chainable methods", () => {
 		});
 	});
 
-	describe("bigint compositions", () => {
-		it(`P.bigint.optional()`, () => {
-			const f = (input?: string | bigint) =>
-				match(input)
-					.with(P.bigint.optional(), (value) => {
-						type t = Expect<Equal<typeof value, bigint | undefined>>;
-						return `yes ${value}`;
-					})
-					.otherwise((value) => {
-						type t = Expect<Equal<typeof value, string>>;
-						return "no";
-					});
-
-			expect(f(102n)).toBe("yes 102");
-			expect(f()).toBe("yes undefined");
-			expect(f("gabriel")).toBe("no");
-		});
-
-		it(`P.bigint.select()`, () => {
-			const f = (input?: string | bigint) =>
-				match({ input })
-					.with({ input: P.bigint.select() }, (value) => {
-						type t = Expect<Equal<typeof value, bigint>>;
-						return `yes ${value}`;
-					})
-					.otherwise(() => "no");
-
-			expect(f(102n)).toBe("yes 102");
-			expect(f()).toBe("no");
-			expect(f("gabriel")).toBe("no");
-		});
-
-		it(`P.bigint.positive().between(..).optional().select(),`, () => {
-			const f = (input?: string | bigint) =>
-				match({ input })
-					.with(
-						{
-							input: P.bigint.positive().between(3n, 7n).optional().select(),
-						},
-						(value) => {
-							type t = Expect<Equal<typeof value, bigint | undefined>>;
-							return `yes ${value}`;
-						},
-					)
-					.otherwise(() => "no");
-
-			expect(f(5n)).toBe("yes 5");
-			expect(f()).toBe("yes undefined");
-			expect(f(1n)).toBe("no");
-			expect(f(8n)).toBe("no");
-			expect(f(-2n)).toBe("no");
-		});
-	});
-
 	describe("and", () => {
 		it("should infer the intersection of narrowed patterns", () => {
 			const f = (input?: string | number) =>
